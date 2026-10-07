@@ -263,6 +263,14 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   border-radius: var(--radius);
   overflow: hidden;
 }
+
+.ph-img img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: inherit;
+
+}
 /* chamfered technical corner ticks */
 .ph-img::before, .ph-img::after {
   content: ''; position: absolute; width: 18px; height: 18px;
@@ -329,7 +337,7 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   text-shadow: 0 0 52px color-mix(in oklab, var(--p2) 46%, transparent), 0 0 120px color-mix(in oklab, var(--p1) 34%, transparent);
 }
 .hero-tag {
-  font-family: var(--font-mono); font-size: clamp(11px, 1.15vw, 14px);
+  font-family: var(--font-mono); font-size: clamp(8px, 1vw, 11px);
   letter-spacing: .52em; text-transform: uppercase; color: var(--accent);
   margin: 16px 0 0; padding-left: 3px;
 }
@@ -375,6 +383,20 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 </style>
 <style>
 /* ═══ 01 · TEAM ═══════════════════════════════════════════════════ */
+
+.member-header{
+	font-size: 24px;
+	margin: 0px 0px 10px 0px;
+
+}
+
+.alumni-header{
+	font-size: 24px;
+	margin: 5px 0px 0px 0px;
+
+}
+
+
 .lead-profile {
   display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   gap: clamp(22px, 4vw, 56px); align-items: center;
@@ -397,7 +419,10 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .spec-list dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; color: var(--muted); }
 .spec-list dd { margin: 0; font-size: 14px; color: var(--fg); }
 .id-chip { display: inline-block; margin-top: 22px; padding: 5px 10px; font-size: 10px; letter-spacing: .2em; color: var(--accent); border: 1px solid var(--gold-line); border-radius: var(--radius); }
-.profile-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.profile-grid { 
+	display: grid; 
+	grid-template-columns: repeat(4, minmax(0, 1fr)); 
+	gap: 18px; }
 .profile-card {
   background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
   overflow: hidden; position: relative;
@@ -414,6 +439,48 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .profile-note { padding: 22px; }
 .profile-note p { color: var(--muted); font-size: 14px; margin: 12px 0 18px; }
 .profile-note .btn { width: 100%; justify-content: center; }
+
+.alumni-card{
+	background: var(--panel);
+	position: relative;
+	width: 60px;
+	aspect-ratio: 3/2;
+	z-index: 1;
+	border: 1px solid var(--border); 
+	border-radius: var(--radius);
+	position: relative;
+  	transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.alumni-grid{
+	display: grid; 
+	grid-template-columns: repeat(4, minmax(0, 1fr)); 
+	gap: 18px; 
+}
+
+.alumni-role{
+	position: absolute;
+	font-family: var(--font-mono);
+	font-size: 10px; 
+	letter-spacing: .24em; color: var(--accent); 
+}
+
+.alumni-pfp{
+	position: absolute;
+	height: 10px;
+	width: 10px;
+	background-color: transparent;
+	border-radius: 50%;
+}
+
+.alumni-name{
+	position: absolute;
+	font-family: var(--font-display); 
+	font-size: clamp(22px, 2.6vw, 34px); 
+	letter-spacing: .05em; margin: 12px 0 14px; 
+}
+
+
 </style>
 <style>
 /* ═══ 02 · THE MACHINE ════════════════════════════════════════════ */
@@ -509,7 +576,9 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
    viewport per member); `.roster-view` is the sticky stage the canvas
    renders into, so the gallery holds the frame while the page scrolls
    through it. */
-.roster { position: relative; height: calc(var(--roster-n, 4) * 100vh); margin-top: clamp(34px, 5vw, 64px); }
+.roster { position: relative;
+	height: calc(var(--roster-n, 4) * 100vh);
+	margin-top: clamp(34px, 5vw, 64px); }
 .roster-view {
   position: sticky; top: 0; height: 100vh;
   display: grid; place-items: center; overflow: hidden;
@@ -519,7 +588,12 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 
 /* the real roster cards: authoritative source for the textures, and the
    whole experience for anyone without WebGL or with reduced motion */
-.roster-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.roster-grid { 
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 18px;
+
+}
 
 /* Roster cards are presented as portrait feature panels. The default
    `.profile-media` is a 3:4 portrait box, which on a narrow four-up grid
@@ -713,7 +787,7 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   .foot-top { flex-direction: column; }
 }
 @media (max-width: 560px) {
-  .profile-grid { grid-template-columns: 1fr; }
+  .profile-grid { grid-template-columns: 4fr; }
   .machine-specs { grid-template-columns: 1fr; }
   .hero-cta .btn { width: 100%; justify-content: center; }
   .sword-cap { font-size: 9px; letter-spacing: .18em; }
@@ -763,20 +837,18 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   <div class="hero-inner">
 
     <div class="hero-copy">
-      <p class="eyebrow"><span class="eyebrow-dot"></span>FTC ROBOTICS TEAM · LOREM IPSUM</p>
+      <p class="eyebrow"><span class="eyebrow-dot"></span>FTC ROBOTICS TEAM · 22972</p>
       <h1 class="wordmark" data-od-id="hero-wordmark">EXCALIBUR</h1>
-      <p class="hero-tag">LOREM IPSUM DOLOR</p>
-      <p class="hero-sub">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
+      <p class="hero-tag">Pulled from the Stone, Sharpened by the Mind</p>
+      <p class="hero-sub"> We aim to enhance our collective engineering prowess, and to expand our community impact, both within and outside GSSM, by recruiting the most driven, talented, and determined individuals among us and training them to a higher form of robotics.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#robot">Lorem ipsum dolor</a>
-        <a class="btn btn-ghost btn-arrow" href="#build">Consectetur elit</a>
+        <a class="btn btn-primary" href="#robot">Check our Robots</a>
+        <a class="btn btn-ghost btn-arrow" href="#contact">Contact Us</a>
       </div>
       <dl class="hero-readout">
-        <div><dt>LOREM</dt><dd class="num">0000–00</dd></div>
-        <div><dt>IPSUM</dt><dd class="num">ABC</dd></div>
-        <div><dt>DOLOR</dt><dd class="num">L0.0</dd></div>
+        <div><dt>Year Competing</dt><dd class="num">4</dd></div>
+        <div><dt>Outreach Hours</dt><dd class="num">70+</dd></div>
+	<!--<div><dt> Idk what to put here </dt><dd class="num">L0.0</dd></div>-->
       </dl>
     </div>
 
@@ -807,28 +879,73 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <header class="sec-head">
       <span class="sec-num num">01</span>
       <div>
-        <h2>Lorem ipsum dolor sit</h2>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <h2>Meet the Team </h2>
+	<p class="lead">Led by South Carolina Governor's School for Science and Math students.</p>
       </div>
-      <span class="sec-tag">LOREM IPSUM</span>
+      <span class="sec-tag"> 22972 </span>
     </header>
 
-    <article class="lead-profile" data-od-id="team-lead-royce">
+
+    <h1 class="member-header"> Members: </h1>
+
+    <!--Trey Hill's Card-->
+    <article class="lead-profile" data-od-id="team-lead-trey">
       <div class="profile-media">
-        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">02 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <img src="IMG_3115.jpg">
+		<span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
       </div>
       <div class="profile-body">
-        <span class="profile-role">LOREM / IPSUM</span>
-        <h3 class="profile-name">LOREM IPSUM</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+        <span class="profile-role">Mechanical Captain / Software</span>
+        <h3 class="profile-name">Trey </h3>
+        <p> OnShape Demon. </p>
         <dl class="spec-list">
-          <div><dt>LOREM</dt><dd>Ipsum dolor sit amet</dd></div>
-          <div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
-          <div><dt>DOLOR</dt><dd class="num">00</dd></div>
+          <div><dt>Class: </dt><dd> 2027 </dd></div>
+         <!-- <div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
+	 <div><dt>DOLOR</dt><dd class="num">00</dd></div> -->
         </dl>
         <span class="id-chip num">EX-P-001</span>
       </div>
     </article>
+
+    <!--Sanjey R. Card-->
+    <article class="lead-profile" data-od-id="team-lead-sanjey">
+      <div class="profile-media">
+        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <img src="IMG_3115.jpg">
+		<span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
+      </div>
+      <div class="profile-body">
+        <span class="profile-role"> Outreach Captain / Mechanical </span>
+        <h3 class="profile-name"> Sanjey R. </h3>
+        <p> Pizza Lover. </p>
+        <dl class="spec-list">
+          <div><dt>Class: </dt><dd> 2027</dd></div>
+          <!--<div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
+	  <div><dt>DOLOR</dt><dd class="num">00</dd></div>
+        </dl>
+	<span class="id-chip num">EX-P-002</span>-->
+      </div>
+    </article>
+
+    <!-- Lamont Hargraves Card -->
+    <article class="lead-profile" data-od-id="team-lead-royce">
+      <div class="profile-media">
+	      <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <img src="IMG_3115.jpg">
+		       <span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div> 
+      </div>
+      <div class="profile-body">
+        <span class="profile-role"> Software + Drive & Strategy Captain / Mechanical  </span>
+        <h3 class="profile-name"> LaMont  </h3>
+        <p> Average Bench Press Enjoyer. </p>
+        <dl class="spec-list">
+          <div><dt>Class: </dt><dd> 2027 </dd></div>
+          <!--<div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
+          <div><dt>DOLOR</dt><dd class="num">00</dd></div>
+        </dl>
+	<span class="id-chip num">EX-P-003</span> -->
+      </div>
+    </article>
+
+
 
     <!-- The roster is the page's one 3D gallery. The four cards below are
          the real list: WebGL renders them flying through space on scroll,
@@ -837,54 +954,206 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <div class="roster" id="roster" style="--roster-n: 4">
       <div class="roster-view">
         <div class="roster-stage" id="roster-stage" aria-hidden="true"></div>
-        <p class="roster-status" aria-hidden="true">Scroll to travel · 01 / 04</p>
+        <p class="roster-status" aria-hidden="true">Scroll to travel · 01 / 13</p>
       </div>
       <div class="roster-grid" id="roster-grid">
+
+
+
+	<!-- Royce's (the captain) Profile-->
       <article class="profile-card" data-od-id="team-card-mechanical">
         <div class="profile-media">
           <div class="ph-img" role="img" aria-label="Placeholder image slot — 03 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">03 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
         </div>
         <div class="profile-meta">
-          <span class="profile-role">DOLOR / SIT AMET</span>
-          <h3 class="profile-name">DOLOR SIT</h3>
-          <span class="id-chip num">EX-P-002</span>
+          <span class="profile-role">Mechanical / Software</span>
+          <h3 class="profile-name"> Royce </h3>
+          <span class="id-chip num">EX-P-001</span>
         </div>
       </article>
 
+
+
+	<!-- Kahlan's Profile -->
       <article class="profile-card" data-od-id="team-card-design">
         <div class="profile-media">
           <div class="ph-img" role="img" aria-label="Placeholder image slot — 04 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">04 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
         </div>
         <div class="profile-meta">
-          <span class="profile-role">CONSECTETUR / ELIT</span>
-          <h3 class="profile-name">CONSECTETUR</h3>
-          <span class="id-chip num">EX-P-003</span>
+          <span class="profile-role">Mechanical</span>
+          <h3 class="profile-name">Kahlan</h3>
+          <span class="id-chip num">EX-P-002</span>
         </div>
       </article>
 
+
+
+      <!--Lucas' Profile-->
       <article class="profile-card" data-od-id="team-card-drive">
         <div class="profile-media">
           <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
         </div>
         <div class="profile-meta">
-          <span class="profile-role">SED DO / EIUSMOD</span>
-          <h3 class="profile-name">SED DO EIUSMOD</h3>
+          <span class="profile-role">Mechanical</span>
+          <h3 class="profile-name">Lucas</h3>
+          <span class="id-chip num">EX-P-003</span>
+        </div>
+      </article>
+
+
+
+	<!-- Sanjay's profile -->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Mechanical</span>
+          <h3 class="profile-name">Sanjay K.</h3>
           <span class="id-chip num">EX-P-004</span>
         </div>
       </article>
 
+
+
+      <!--Yichen's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Mechanical / Outreach</span>
+          <h3 class="profile-name"> Yichen </h3>
+          <span class="id-chip num">EX-P-005</span>
+        </div>
+      </article>
+
+
+
+	<!--SJ's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Mechanical</span>
+          <h3 class="profile-name">SJ</h3>
+          <span class="id-chip num">EX-P-006</span>
+        </div>
+      </article>
+
+
+
+	<!--Esaw's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Mechanical / Driver</span>
+          <h3 class="profile-name">Eshaw</h3>
+          <span class="id-chip num">EX-P-007</span>
+        </div>
+      </article>
+
+
+
+	<!--Peyton's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Mechanical / Outreach</span>
+          <h3 class="profile-name">Peyton</h3>
+          <span class="id-chip num">EX-P-008</span>
+        </div>
+      </article>
+
+
+
+	<!--Keerthika's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Mechanical</span>
+          <h3 class="profile-name">Keerthika</h3>
+          <span class="id-chip num">EX-P-009</span>
+        </div>
+      </article>
+
+
+
+	<!--Audrey's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Outreach</span>
+          <h3 class="profile-name">Audrey</h3>
+          <span class="id-chip num">EX-P-010</span>
+        </div>
+      </article>
+
+
+
+	<!--Reese's profile-->
+      <article class="profile-card" data-od-id="team-card-drive">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 05 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">05 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Software/Mechanical</span>
+          <h3 class="profile-name">Reese</h3>
+          <span class="id-chip num">EX-P-011</span>
+        </div>
+      </article>
+
+
+
+	<!-- Kahlan's Profile-->
+      <article class="profile-card" data-od-id="team-card-design">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Placeholder image slot — 04 / PORTRAIT SLOT" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">04 / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="profile-meta">
+          <span class="profile-role">Outreach</span>
+          <h3 class="profile-name">Zach</h3>
+          <span class="id-chip num">EX-P-012</span>
+        </div>
+      </article>
+
+
       <article class="profile-card profile-card-note" data-od-id="team-card-open">
         <div class="profile-note">
-          <span class="profile-role">TEMPOR</span>
-          <h3 class="profile-name">+ 0 LOREM</h3>
+          <span class="profile-role">0+ e</span>
+          <h3 class="profile-name">Tempor</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
           <a class="btn btn-ghost btn-arrow" href="#contact">Lorem ipsum</a>
         </div>
       </article>
       </div><!-- /.roster-grid -->
     </div><!-- /.roster -->
+
+    <h2 class="alumni-header"> Alumni: </h2>
+
+
+    <div class="alumni-grid">
+	    <div class="alumni-card">
+		
+
+	    </div>
+    </div>
+
+
+
+
   </div>
 </section>
+
 
 <!-- ═══ 02 · THE MACHINE ═══ -->
 <section class="section machine" id="robot" data-od-id="robot">
@@ -892,10 +1161,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <header class="sec-head">
       <span class="sec-num num">02</span>
       <div>
-        <h2>Lorem ipsum dolor</h2>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <h2>Robots</h2>
+        <p class="lead"> Our Current and Past builds </p>
       </div>
-      <span class="sec-tag">DOLOR SIT</span>
+      <span class="sec-tag">22972</span>
     </header>
 
     <div class="machine-stage" data-od-id="robot-stage">
@@ -925,9 +1194,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     </div>
 
     <dl class="machine-specs" data-od-id="robot-specs">
-      <div><dt>LOREM</dt><dd>Ipsum · Dolor sit</dd></div>
-      <div><dt>IPSUM</dt><dd class="num">0.00 unit</dd></div>
-      <div><dt>DOLOR</dt><dd>Consectetur adipiscing</dd></div>
+      <div><dt>Events</dt><dd>Coming soon</dd></div>
+      <div><dt>Strengths</dt><dd class="num">Coming soon</dd></div>
+      <div><dt>Guh</dt><dd>Consectetur adipiscing</dd></div>
       <div><dt>SIT AMET</dt><dd class="num">00.0 unit</dd></div>
     </dl>
   </div>
@@ -1078,10 +1347,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <header class="sec-head">
       <span class="sec-num num">05</span>
       <div>
-        <h2>Lorem ipsum dolor sit amet.</h2>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <h2>Outreach</h2>
+        <p class="lead">We don't want to just succeed ourselves. We want to help spread the love of STEM and help other teams reach success. </p>
       </div>
-      <span class="sec-tag">EIUSMOD</span>
+      <span class="sec-tag">22972</span>
     </header>
 
     <div class="outreach-band" data-od-id="outreach-hero">
@@ -1091,9 +1360,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <span class="ob-highlight" aria-hidden="true"></span>
       </figure>
       <div class="ob-copy">
-        <span class="ob-cap num">01 / LOREM</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <span class="ob-cap num">01</span>
+        <h3>Mentorship</h3>
+        <p>We helped found FTC 37033 Lucky Cowboys in 2026. We currently mentor this team.</p>
         <span class="ob-stat"><b class="num">0,000</b> lorem ipsum dolor sit</span>
       </div>
     </div>
@@ -1103,18 +1372,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <figure class="oc-figure">
           <div class="ph-img" role="img" aria-label="Placeholder image slot — 11 / OUTREACH SLOT" style="--ar:1500/996"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">11 / OUTREACH SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
         </figure>
-        <span class="oc-cap num">02 / IPSUM</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <span class="oc-cap num">02 </span>
+        <h3>STEM Days</h3>
+	<p> We show the younger generation what FTC is. </p>
       </article>
 
       <article class="oc-card" data-od-id="outreach-fairs">
         <figure class="oc-figure">
           <div class="ph-img" role="img" aria-label="Placeholder image slot — 12 / OUTREACH SLOT" style="--ar:1024/683"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">12 / OUTREACH SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
         </figure>
-        <span class="oc-cap num">03 / DOLOR</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <span class="oc-cap num">03</span>
+        <h3>Musuem Visits</h3>
+        <p>We showcase our robot at a Fort Mill musuem.</p>
       </article>
     </div>
   </div>
@@ -1124,11 +1393,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <section class="section contact" id="contact" data-od-id="cta-strip">
   <div class="contact-glow" aria-hidden="true"></div>
   <div class="container contact-inner">
-    <p class="eyebrow">06 / LOREM IPSUM</p>
-    <h2 class="contact-head">Lorem ipsum dolor sit amet.</h2>
-    <p class="lead contact-lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    <a class="btn btn-primary btn-lg" href="mailto:lorem@example.org">Lorem ipsum dolor</a>
-    <p class="contact-mail num">lorem@example.org</p>
+    <p class="eyebrow">06</p>
+    <h2 class="contact-head">Reach Out to Us</h2>
+    <p class="lead contact-lead">To help us with our mission, please support us.</p>
+    <a class="btn btn-primary btn-lg" href="mailto:22972excaliber@gmail.com">Contact Us</a>
+    <p class="contact-mail num"></p>
   </div>
 </section>
 
@@ -1140,7 +1409,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <div class="foot-top">
       <div>
         <span class="foot-word">EXCALIBUR</span>
-        <p class="foot-sub">Lorem ipsum · Dolor Sit Amet</p>
+        <p class="foot-sub">Pulled from the Stone, Sharpened by the Mind</p>
       </div>
       <nav class="foot-nav" aria-label="Footer">
         <a href="#team">Team</a><a href="#robot">Robot</a><a href="#build">Build</a>
