@@ -2,3 +2,17 @@ node_modules/
 dist/
 .DS_Store
 *.log
+
+# ── not shipped ──────────────────────────────────────────────────────
+# 131 MB, unreferenced by the page, and GitHub rejects any file over
+# 100 MB — one careless `git add -A` would break the push outright.
+phoenix.glb
+IMG_8479.HEIC
+
+# Superseded sword artwork. The hero cut-out was removed from the page
+# (it was an 880 KB PNG doing decorative work the CSS glow now does);
+# the sources stay on disk but out of git.
+Ecalibur.png
+excalibur.png
+no_bg_image(1).png
+no_bg_image (1).png

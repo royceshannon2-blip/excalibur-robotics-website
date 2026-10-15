@@ -2,9 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>EXCALIBUR · FTC Robotics Team</title>
+<!-- Icons. Without a declared icon the browser makes an implicit
+     /favicon.ico request, which was the only console error this page
+     ever produced. -->
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#08050D" />
 <style>
+/* ═══ FONTS — self-hosted variable subsets ══════════════════════════
+   Cinzel — inscriptional Roman capitals, the lettering of carved stone
+   and sword-legends; the display voice for the wordmark, section
+   headings and names.
+   Inter — engineering clarity at body size.
+   JetBrains Mono — identifiers, coordinates and tabular measurement.
+   All three are SIL Open Font License 1.1. Latin subsets are vendored
+   in ./fonts so the page never depends on a remote host. */
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('fonts/cinzel-latin-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('fonts/inter-latin-var.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('fonts/jetbrains-mono-latin-var.woff2') format('woff2');
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    EXCALIBUR — design tokens
    Brand source supplied by the user. These are the ONLY raw hex values
@@ -31,7 +68,7 @@
   --glass:       color-mix(in oklab, var(--surface) 78%, transparent);
   --panel:       color-mix(in oklab, var(--surface) 62%, transparent);
 
-  --font-display: 'Michroma', 'Rajdhani', 'Eurostile', 'Bahnschrift', 'DIN Alternate', system-ui, sans-serif;
+  --font-display: 'Cinzel', 'Trajan Pro', 'Palatino Linotype', 'Book Antiqua', Georgia, 'Times New Roman', serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
@@ -105,10 +142,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; }
 
 
 
-/* particles are drawn on canvas */
-#particles { width: 100%; height: 100%; opacity: .85; }
-
-/* vignette + gold streak */
+/* vignette */
 .bg { will-change: transform; }
 
 /* The scroller is the document itself. Anchor suppression keeps Chrome
@@ -151,7 +185,7 @@ html { overflow-anchor: none; }
 .nav-brand { display: flex; align-items: center; gap: 10px; }
 .nav-glyph { width: 20px; height: 20px; color: var(--accent); flex: none; }
 .nav-word {
-  font-family: var(--font-display); font-size: 14px; letter-spacing: .22em;
+  font-family: var(--font-display); font-size: 14px; letter-spacing: .09em;
   color: var(--fg);
 }
 .nav-links { display: flex; align-items: center; gap: 4px; }
@@ -175,10 +209,14 @@ html { overflow-anchor: none; }
   box-shadow: 0 0 18px color-mix(in oklab, var(--p2) 26%, transparent);
 }
 .nav-link.active::after { transform: scaleX(1); }
-.nav-toggle { display: none; background: none; border: 1px solid var(--gold-line); border-radius: var(--radius); width: 40px; height: 36px; padding: 0; position: relative; }
-.nav-toggle span { position: absolute; left: 10px; right: 10px; height: 1px; background: var(--fg); transition: transform .3s var(--ease), opacity .3s var(--ease); }
-.nav-toggle span:first-child { top: 14px; }
-.nav-toggle span:last-child { top: 21px; }
+/* 44x44 is the smallest comfortable touch target; the button is only
+   ever displayed on touch layouts, so its size costs the desktop
+   nothing. The two bars sit either side of the centre line (18.5 and
+   25.5 in a 44px box) so the open/closed cross still meets dead centre. */
+.nav-toggle { display: none; background: none; border: 1px solid var(--gold-line); border-radius: var(--radius); width: 44px; height: 44px; padding: 0; position: relative; }
+.nav-toggle span { position: absolute; left: 11px; right: 11px; height: 1px; background: var(--fg); transition: transform .3s var(--ease), opacity .3s var(--ease); }
+.nav-toggle span:first-child { top: 18.5px; }
+.nav-toggle span:last-child { top: 25.5px; }
 .nav.is-open .nav-toggle span:first-child { transform: translateY(3.5px) rotate(45deg); }
 .nav.is-open .nav-toggle span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
 /* ═══ shared primitives ══════════════════════════════════════════ */
@@ -193,26 +231,21 @@ html { overflow-anchor: none; }
 }
 .eyebrow-dot { width: 6px; height: 6px; background: var(--accent); flex: none; box-shadow: 0 0 12px var(--accent); }
 
-h2 { font-family: var(--font-display); font-size: clamp(28px, 3.6vw, 50px); line-height: 1.08; letter-spacing: .01em; }
-h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line-height: 1.25; letter-spacing: .04em; }
+h2 { font-family: var(--font-display); font-size: clamp(28px, 3.6vw, 50px); line-height: 1.1; letter-spacing: 0; }
+h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line-height: 1.25; letter-spacing: .01em; }
 .lead { font-size: clamp(15px, 1.15vw, 17px); line-height: 1.68; color: var(--muted); max-width: 62ch; margin: 18px 0 0; }
 .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
 
-/* section header: numbered indicator + title + tag */
+/* section header: title + tag */
 .sec-head {
-  display: grid; grid-template-columns: 92px minmax(0, 1fr) auto;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
   gap: clamp(16px, 3vw, 44px); align-items: start;
   padding-bottom: 30px; margin-bottom: clamp(38px, 5vw, 68px);
   border-bottom: 1px solid var(--border); position: relative;
 }
 .sec-head::after {
   content: ''; position: absolute; left: 0; bottom: -1px; width: 130px; height: 1px; background: var(--accent);
-}
-.sec-num {
-  font-family: var(--font-display); font-size: clamp(30px, 3.2vw, 46px); line-height: 1;
-  color: var(--accent); letter-spacing: .02em;
-  text-shadow: 0 0 26px color-mix(in oklab, var(--accent) 34%, transparent);
 }
 .sec-tag {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: .26em; color: var(--muted);
@@ -226,8 +259,9 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase;
   border-radius: var(--radius); border: 1px solid transparent;
   position: relative; overflow: hidden;
-  transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+  transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease), transform .15s var(--ease);
 }
+.btn:active { transform: scale(.96); }
 .btn-primary { background: var(--accent); color: color-mix(in oklab, var(--bg) 92%, transparent); border-color: var(--accent); font-weight: 600; }
 .btn-primary:hover {
   background: var(--gold-bright); border-color: var(--gold-bright);
@@ -269,8 +303,25 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 	height: 100%;
 	object-fit: cover;
 	border-radius: inherit;
-
 }
+
+/* When a real image occupies the slot it must FILL it: the placeholder's
+   grid centring and 20px padding would otherwise inset the photo, leaving
+   a gap inside the frame, and an uncapped height let a tall portrait (the
+   museum shot is 4284x5712) overflow the slot entirely. */
+/* A photo may sit directly in the slot, or inside a <picture> that is
+   negotiating AVIF/WebP. Both must be treated identically, so every rule
+   below matches either shape — `.ph-img > img` alone stopped applying the
+   fill-the-slot geometry the moment a <picture> was introduced. */
+.ph-img:has(> img), .ph-img:has(> picture) { padding: 0; display: block; }
+.ph-img > img, .ph-img > picture > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* keep heads in frame: people are framed high, so anchor the crop to the top */
+.ob-figure .ph-img > img, .ob-figure .ph-img > picture > img,
+.oc-figure .ph-img > img, .oc-figure .ph-img > picture > img { object-position: center top; }
+/* the placeholder chrome must not draw over a real photo */
+.ph-img:has(> img) .ph-mark, .ph-img:has(> picture) .ph-mark,
+.ph-img:has(> img) .ph-label, .ph-img:has(> picture) .ph-label,
+.ph-img:has(> img) .ph-note, .ph-img:has(> picture) .ph-note { display: none; }
 /* chamfered technical corner ticks */
 .ph-img::before, .ph-img::after {
   content: ''; position: absolute; width: 18px; height: 18px;
@@ -295,7 +346,7 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   color: var(--muted); text-transform: uppercase;
 }
 /* the placeholder owns its own frame; drop the image-era media boxes */
-.tl-fig .ph-img, .oc-figure .ph-img { aspect-ratio: 16 / 10; }
+.oc-figure .ph-img { aspect-ratio: 16 / 10; }
 .ob-figure .ph-img { min-height: 340px; aspect-ratio: auto; height: 100%; }
 
 
@@ -303,19 +354,21 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
    owns their `transform`. The reveal therefore animates opacity and a
    filter only: writing `transform` here would overwrite the camera's
    zoom every time a card entered, cancelling the card-approach effect. */
-.sec-head, .lead-profile, .profile-card, .tl-step, .dash, .honour, .outreach-band, .oc-card, .contact-inner, .machine-specs {
+.sec-head, .lead-profile, .profile-card, .outreach-band, .oc-card, .contact-inner {
   opacity: 0; filter: blur(6px);
   transition: opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
 }
 .in { opacity: 1; filter: none; }
 @media (prefers-reduced-motion: reduce) {
-  .sec-head, .lead-profile, .profile-card, .tl-step, .dash, .honour, .outreach-band, .oc-card, .contact-inner, .machine-specs { opacity: 1; filter: none; transition: none; }
+  .sec-head, .lead-profile, .profile-card, .outreach-band, .oc-card, .contact-inner,
+  .machine-figure, .robot-awards, .fund-card, .alumni-card, .tier, .give, .sponsor-slot { opacity: 1; filter: none; transition: none; }
+  .sec-head::after { transform: none; transition: none; }
   .bg-aurora::after { animation: none !important; }
 }
 </style>
 <style>
 /* ═══ 00 · HERO ═══════════════════════════════════════════════════ */
-.hero { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 150px 0 40px; overflow: hidden; }
+.hero { position: relative; z-index: 2; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 112px 0 48px; overflow: hidden; }
 .hero-rays {
   position: absolute; inset: -20% -10% 0; z-index: -1; pointer-events: none;
   background:
@@ -326,14 +379,14 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 }
 .hero-inner {
   max-width: var(--container); margin: 0 auto; width: 100%; padding-inline: var(--gutter);
-  display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  display: grid; grid-template-columns: minmax(0, 1fr);
   gap: clamp(40px, 6vw, 110px); align-items: center;
 }
 .hero-copy { position: relative; min-width: 0; }
 .wordmark {
   font-family: var(--font-display);
   font-size: clamp(38px, 4.3vw, 84px);
-  line-height: .92; letter-spacing: .015em; margin: 0; color: var(--fg);
+  line-height: 1; letter-spacing: -0.005em; margin: 0; color: var(--fg);
   text-shadow: 0 0 52px color-mix(in oklab, var(--p2) 46%, transparent), 0 0 120px color-mix(in oklab, var(--p1) 34%, transparent);
 }
 .hero-tag {
@@ -349,37 +402,12 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .hero-readout dd { margin: 6px 0 0; font-size: 15px; color: var(--fg); }
 </style>
 <style>
-/* sword centerpiece */
-.hero-sword { position: relative; margin: 0; display: flex; justify-content: center; align-items: flex-end; min-height: 560px; min-width: 0; }
-.sword-stage { position: relative; width: min(70%, 360px); z-index: 2; }
-.sword-stage .ph-img {
-  border-color: var(--gold-line);
-  background:
-    linear-gradient(to top,
-      color-mix(in oklab, var(--p1) 22%, transparent),
-      color-mix(in oklab, var(--bg) 74%, transparent) 62%),
-    repeating-linear-gradient(90deg,
-      color-mix(in oklab, var(--p2) 9%, transparent) 0 1px,
-      transparent 1px 14px);
-  box-shadow: 0 0 60px color-mix(in oklab, var(--p1) 26%, transparent);
-}
-.sword-glow {
-  position: absolute; inset: -14% -30%; pointer-events: none;
-  background: linear-gradient(to top, color-mix(in oklab, var(--p2) 32%, transparent), transparent 58%);
-  mix-blend-mode: screen;
-}
-.sword-plinth { position: absolute; bottom: -6px; width: min(96%, 520px); z-index: 1; }
-.plinth-top { display: block; height: 16px; background: linear-gradient(to right, transparent, color-mix(in oklab, var(--p2) 30%, transparent), transparent); filter: blur(1px); }
-.plinth-face {
-  display: block; height: 76px;
-  background: linear-gradient(to bottom, color-mix(in oklab, var(--surface) 90%, transparent), var(--bg));
-  border-top: 1px solid var(--gold-line);
-  clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
-}
-.plinth-edge { display: block; height: 1px; margin-top: 6px; background: linear-gradient(to right, transparent, var(--gold-line) 20%, var(--gold-line) 80%, transparent); }
-.sword-cap { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 10px; letter-spacing: .26em; color: var(--muted); white-space: nowrap; }
-.hero-foot { max-width: var(--container); margin: 46px auto 0; width: 100%; padding-inline: var(--gutter); display: flex; align-items: center; justify-content: flex-end; }
-.hero-coord { font-size: 11px; letter-spacing: .16em; color: var(--muted); }
+/* The hero's sword artwork used to live here. It was an 880 KB PNG whose
+   only job was a decorative cut-out, so it was removed rather than
+   re-encoded: the copy column now owns the hero, and the `.hero-rays`
+   glow behind it holds the right-hand side of the frame. */
+
+
 </style>
 <style>
 /* ═══ 01 · TEAM ═══════════════════════════════════════════════════ */
@@ -397,22 +425,74 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 }
 
 
-.lead-profile {
-  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(22px, 4vw, 56px); align-items: center;
-  padding: clamp(20px, 2.4vw, 32px);
-  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
-  position: relative; margin-bottom: 22px;
+/* Captain cards — three across, each a PORTRAIT panel (taller than it is
+   wide) so they read as leadership in the same visual language as the
+   roster below. Previously each was a full-width 1144x445 banner stacked
+   vertically, which swamped the section. */
+.captains-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 26px;
+  /* stretch, not start: the three panels share one row height even when
+     their names wrap to different line counts. */
+  align-items: stretch;
 }
-.lead-profile::before { content: ''; position: absolute; top: 0; left: 0; width: 84px; height: 2px; background: var(--accent); }
+.lead-profile {
+  display: flex; flex-direction: column;
+  padding: 0;
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; position: relative;
+  height: 100%;
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.lead-profile:hover { border-color: var(--gold-bright); box-shadow: 0 22px 52px color-mix(in oklab, var(--bg) 74%, transparent), 0 0 40px color-mix(in oklab, var(--p2) 24%, transparent); }
+.lead-profile::before { content: ''; position: absolute; top: 0; left: 0; width: 52px; height: 2px; background: var(--accent); z-index: 2; }
 .lead-profile::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(46% 60% at 16% 20%, color-mix(in oklab, var(--p2) 16%, transparent), transparent 72%);
 }
-.lead-profile .profile-media { border: 1px solid var(--border); }
+.lead-profile .profile-media { border-bottom: 1px solid var(--border); }
+/* PORTRAIT — the short edge is the width, so the panel is taller than it
+   is wide. 4:5 gives a clear face crop without dominating the column. */
+.lead-profile .profile-media .ph-img { aspect-ratio: 4 / 5; }
+.lead-profile .profile-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* the card body stacks under the portrait inside the panel, and absorbs
+   the leftover height so the chip sits at the foot of every panel */
+.lead-profile .profile-body { padding: clamp(14px, 1.5vw, 20px); flex: 1 1 auto; display: flex; flex-direction: column; }
+.lead-profile .profile-body .id-chip { align-self: flex-start; margin-top: auto; }
 .profile-body { position: relative; z-index: 1; }
 .profile-role { font-family: var(--font-mono); font-size: 10px; letter-spacing: .24em; color: var(--accent); }
-.profile-name { font-family: var(--font-display); font-size: clamp(22px, 2.6vw, 34px); letter-spacing: .05em; margin: 12px 0 14px; }
+.profile-name { font-family: var(--font-display); font-size: clamp(22px, 2.6vw, 34px); letter-spacing: .01em; margin: 12px 0 14px; }
+
+/* scaled-down type for the captain panels. Scoped to .lead-profile so the
+   roster cards, whose capture bakes these sizes into a texture, are
+   untouched. */
+/* Reserve two lines for the role. LaMont's is long enough to wrap at
+   narrow widths, which made his panel 15px taller than the other two
+   once the row collapses to a single column and there is no longer a
+   sibling to match heights against. Reserving the space keeps all three
+   panels equal everywhere, not just while they share a row. */
+.lead-profile .profile-role { font-size: 9px; letter-spacing: .18em; line-height: 1.6; min-height: 3.2em; display: block; }
+.lead-profile .profile-name { font-size: clamp(18px, 1.7vw, 24px); margin: 8px 0 8px; }
+.lead-profile .profile-body p { font-size: 13px; }
+.lead-profile .spec-list { margin: 12px 0 0; padding-top: 10px; gap: 6px; }
+.lead-profile .spec-list dt { font-size: 9px; }
+.lead-profile .spec-list dd { font-size: 12.5px; }
+.lead-profile .id-chip { margin-top: 12px; padding: 4px 8px; font-size: 9px; }
+
+/* ── the capture must not inherit the card's text colour ──────────────
+   When a roster card is rasterised into the SVG <foreignObject>, the
+   name came out solid black against the near-black panel: the text was
+   present in the texture but invisible on the wall. Reproduced only with
+   the full stylesheet in play, and forcing the colour back to --fg
+   restores it (measured: 4661 black px -> 0 black, 4334 white px).
+   Colour is therefore asserted here rather than inherited, so the
+   captured type can never drift from the live card again. */
+.roster .profile-card .profile-name,
+.roster .profile-card .profile-meta { color: var(--fg); }
+.roster .profile-card .profile-role,
+.roster .profile-card .id-chip { color: var(--accent); }
 .profile-body p { color: var(--muted); font-size: 15px; margin: 0; max-width: 48ch; }
 .spec-list { margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--border); display: grid; gap: 10px; }
 .spec-list > div { display: grid; grid-template-columns: 88px 1fr; gap: 14px; align-items: baseline; }
@@ -439,45 +519,56 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .profile-note { padding: 22px; }
 .profile-note p { color: var(--muted); font-size: 14px; margin: 12px 0 18px; }
 .profile-note .btn { width: 100%; justify-content: center; }
+/* NOTE: `.profile-card-note` / `.profile-note` are kept for reuse, but the
+   roster's 13th "Tempor" placeholder card was removed, so the grid is now
+   exactly 12 members — three clean rows of four. */
 
-.alumni-card{
-	background: var(--panel);
-	position: relative;
-	width: 60px;
-	aspect-ratio: 3/2;
-	z-index: 1;
-	border: 1px solid var(--border); 
-	border-radius: var(--radius);
-	position: relative;
-  	transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+/* ── ALUMNI ───────────────────────────────────────────────────────────
+   Two rows of four. Each card mirrors the roster card's structure — a
+   portrait placeholder over a name and role — so the two read as one
+   family, but alumni are past members: no id chip, no 3D gallery, just
+   the flat grid.
+
+   The previous rules sized the card at 60px with every child absolutely
+   positioned inside it, which collapsed the card to a sliver and piled
+   the text on top of itself. Laid out normally instead. */
+.alumni-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 6px;
+}
+.alumni-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; position: relative;
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.alumni-card::after { content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: var(--accent); transition: width .5s var(--ease); }
+.alumni-card:hover { border-color: var(--gold-bright); box-shadow: 0 22px 52px color-mix(in oklab, var(--bg) 74%, transparent), 0 0 40px color-mix(in oklab, var(--p2) 24%, transparent); }
+.alumni-card:hover::after { width: 100%; }
+
+/* the same portrait slot the roster cards use, so the rows align */
+.alumni-card .ph-img { position: relative; aspect-ratio: 5 / 4; border-bottom: 1px solid var(--border); }
+.alumni-card .profile-media { border-bottom: 1px solid var(--border); }
+
+.alumni-meta { padding: 16px 18px; }
+.alumni-role {
+  display: block;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .24em;
+  color: var(--accent);
+}
+.alumni-name {
+  display: block;
+  font-family: var(--font-display); font-size: clamp(15px, 1.5vw, 19px);
+  letter-spacing: .01em; margin: 8px 0 0; color: var(--fg);
+  line-height: 1.25;
 }
 
-.alumni-grid{
-	display: grid; 
-	grid-template-columns: repeat(4, minmax(0, 1fr)); 
-	gap: 18px; 
+@media (max-width: 1080px) {
+  .alumni-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-.alumni-role{
-	position: absolute;
-	font-family: var(--font-mono);
-	font-size: 10px; 
-	letter-spacing: .24em; color: var(--accent); 
-}
-
-.alumni-pfp{
-	position: absolute;
-	height: 10px;
-	width: 10px;
-	background-color: transparent;
-	border-radius: 50%;
-}
-
-.alumni-name{
-	position: absolute;
-	font-family: var(--font-display); 
-	font-size: clamp(22px, 2.6vw, 34px); 
-	letter-spacing: .05em; margin: 12px 0 14px; 
+@media (max-width: 640px) {
+  .alumni-grid { grid-template-columns: 1fr; }
 }
 
 
@@ -530,44 +621,32 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .coord-mark { position: absolute; font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: var(--purple-line); }
 .coord-mark.k1 { top: 12%; left: 24%; }
 .coord-mark.k2 { bottom: 34%; right: 22%; }
-.machine-specs {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px; margin: clamp(30px, 4vw, 54px) 0 0; padding: 0;
-  background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+
+/* ── achievements, listed with the robot ─────────────────────────
+   The awards belong to Phoenix and to the season it ran, so they sit
+   here as a compact list rather than in a section of their own. */
+.robot-awards { margin: clamp(26px, 3vw, 40px) 0 0; }
+.robot-awards-head {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 14px;
 }
-.machine-specs > div { background: var(--panel); padding: 20px; }
-.machine-specs dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; color: var(--muted); }
-.machine-specs dd { margin: 9px 0 0; font-size: 15px; color: var(--fg); }
+.robot-awards-head em { font-style: normal; color: var(--accent); }
+.robot-awards-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.robot-awards-list li {
+  background: var(--panel); padding: 18px 20px; position: relative;
+  transition: background .3s var(--ease);
+}
+.robot-awards-list li::before { content: ''; position: absolute; left: 0; top: 0; width: 0; height: 2px; background: var(--accent); transition: width .45s var(--ease); }
+.robot-awards-list li:hover::before { width: 100%; }
+.robot-awards-list li:hover { background: color-mix(in oklab, var(--p1) 16%, var(--panel)); }
+.ra-award { display: block; font-family: var(--font-display); font-size: clamp(15px, 1.5vw, 18px); letter-spacing: .01em; color: var(--fg); line-height: 1.3; }
+.ra-where { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-top: 8px; line-height: 1.5; }
+
+@media (max-width: 800px) {
+  .robot-awards-list { grid-template-columns: 1fr; }
+}
 </style>
 <style>
-/* ═══ 03 · BUILD TIMELINE ═════════════════════════════════════════ */
-.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
-.tl-step { position: relative; padding: 0 0 clamp(28px, 3.4vw, 46px) clamp(40px, 5vw, 76px); }
-.tl-step::before {
-  content: ''; position: absolute; left: clamp(9px, 1.1vw, 14px); top: 22px; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, var(--purple-line), color-mix(in oklab, var(--p2) 10%, transparent));
-}
-.tl-step:last-child::before { display: none; }
-.tl-node {
-  position: absolute; left: 0; top: 16px; width: 19px; height: 19px;
-  border: 1px solid var(--accent); transform: rotate(45deg);
-  background: color-mix(in oklab, var(--accent) 18%, var(--bg));
-  box-shadow: 0 0 18px color-mix(in oklab, var(--accent) 40%, transparent);
-}
-.tl-card {
-  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: clamp(20px, 2.4vw, 30px); position: relative;
-  transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
-}
-.tl-card::before { content: ''; position: absolute; left: -1px; top: 18px; bottom: 18px; width: 2px; background: var(--accent); opacity: 0; transition: opacity .35s var(--ease); }
-.tl-step:hover .tl-card { border-color: var(--gold-bright); box-shadow: 0 26px 60px color-mix(in oklab, var(--bg) 72%, transparent), 0 0 38px color-mix(in oklab, var(--p2) 22%, transparent); }
-.tl-step:hover .tl-card::before { opacity: 1; }
-.tl-card.has-media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); gap: clamp(18px, 2.4vw, 32px); align-items: center; }
-.tl-num { font-family: var(--font-display); font-size: clamp(26px, 3vw, 42px); color: var(--accent); opacity: .5; letter-spacing: .02em; }
-.tl-card h3 { margin: 8px 0 10px; }
-.tl-card p { color: var(--muted); font-size: 15px; margin: 0; max-width: 52ch; }
-.tl-meta { display: inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; color: var(--muted); }
-.tl-fig { margin: 0; border: 1px solid var(--border); border-radius: var(--radius); }
 
 /* ═══ 01 · TEAM — 3D member gallery ══════════════════════════════
    The four roster cards fly through real 3D space on scroll. This is
@@ -578,12 +657,35 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
    through it. */
 .roster { position: relative;
 	height: calc(var(--roster-n, 4) * 100vh);
+	/* svh, not vh: on iOS Safari 100vh is the LARGE viewport, so the
+	   sticky stage and this scroll length would resize as the URL bar
+	   hides — the wall visibly jumps. svh is the stable small viewport. */
+	height: calc(var(--roster-n, 4) * 100svh);
 	margin-top: clamp(34px, 5vw, 64px); }
 .roster-view {
-  position: sticky; top: 0; height: 100vh;
+  position: sticky; top: 0; height: 100vh; height: 100svh;
   display: grid; place-items: center; overflow: hidden;
+  /* the grid is only here to centre the status pill; the WebGL stage is
+     absolutely positioned and must not be shrink-wrapped by it */
+  grid-template-columns: 100%;
+  /* FULL BLEED. The roster sits inside `.container` (1240px, 1144px of
+     content), but the WebGL framebuffer is sized from the viewport. Left
+     inside the container the canvas was displayed at 1144px while the
+     framebuffer stayed 1440px wide, squashing every card horizontally by
+     ~1.26x. The gallery is meant to be edge-to-edge, so the stage breaks
+     out to the true viewport width and the two now agree. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
 }
-.roster-stage { position: absolute; inset: 0; pointer-events: none; }
+/* The stage must fill the frame exactly. It is taken out of grid flow with
+   `position: absolute` — but an absolutely-positioned child of a grid
+   container still gets an implicit grid AREA, and `place-items: center`
+   then shrink-wraps it to its content. With no content the box collapsed
+   to the grid's centred column width, so the 1440-wide WebGL framebuffer
+   was being squeezed into ~1144px and every card was horizontally
+   squashed by ~1.26x. Pinning all four edges to 0 and forcing the size
+   keeps the canvas 1:1 with the viewport. */
+.roster-stage { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .roster-stage canvas { display: block; width: 100% !important; height: 100% !important; }
 
 /* the real roster cards: authoritative source for the textures, and the
@@ -635,41 +737,13 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   .roster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
+  /* One column, as designed. Two-up was tried and measured out: the card's
+     own meta row needs ~180px, so a 2-up card (131-178px on a phone)
+     overflowed its box at every phone width, clipping the name and the
+     meta line. Legibility beats scroll length here. */
   .roster-grid { grid-template-columns: 1fr; }
 }
 
-/* ═══ 04 · ACHIEVEMENTS ═══════════════════════════════════════════ */
-.dash {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: clamp(24px, 4vw, 60px); align-items: stretch;
-  padding: clamp(26px, 3.4vw, 46px);
-  background: radial-gradient(60% 80% at 12% 16%, color-mix(in oklab, var(--p1) 22%, transparent), transparent 70%), var(--panel);
-  border: 1px solid var(--border); border-radius: var(--radius); position: relative;
-}
-.dash::before { content: ''; position: absolute; top: 0; left: 0; width: 110px; height: 2px; background: var(--accent); }
-.dash-lead { display: flex; flex-direction: column; justify-content: center; }
-.dash-cap { font-family: var(--font-mono); font-size: 10px; letter-spacing: .24em; color: var(--muted); }
-.dash-big, .dash-num {
-  font-family: var(--font-display); font-variant-numeric: tabular-nums;
-  color: var(--fg); letter-spacing: .01em; line-height: 1;
-  text-shadow: 0 0 46px color-mix(in oklab, var(--p2) 34%, transparent);
-}
-.dash-big { font-size: clamp(72px, 11vw, 156px); margin: 16px 0 0; }
-.dash-big::after { content: ''; display: block; width: 62px; height: 2px; background: var(--accent); margin-top: 14px; }
-.dash-note { color: var(--muted); font-size: 14px; margin: 18px 0 0; max-width: 34ch; }
-.dash-side { display: grid; align-content: center; gap: 2px; }
-.dash-cell { display: grid; gap: 10px; padding: 20px 0; border-top: 1px solid var(--border); }
-.dash-cell:first-child { border-top: 0; padding-top: 0; }
-.dash-num { font-size: clamp(34px, 4.4vw, 58px); }
-.dash-bar { display: block; height: 2px; background: var(--border); position: relative; overflow: hidden; }
-.dash-bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: linear-gradient(to right, var(--p1), var(--accent)); box-shadow: 0 0 14px color-mix(in oklab, var(--accent) 34%, transparent); transition: width 1.5s var(--ease) .2s; }
-.in .dash-bar i { width: var(--w); }
-.honours { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
-.honour { padding: 22px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); position: relative; transition: border-color .35s var(--ease); }
-.honour:hover { border-color: var(--gold-bright); box-shadow: 0 22px 50px color-mix(in oklab, var(--bg) 72%, transparent), 0 0 36px color-mix(in oklab, var(--p2) 20%, transparent); }
-.honour-year { font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em; color: var(--accent); }
-.honour h3 { font-size: 16px; margin: 12px 0 8px; }
-.honour-meta { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .16em; color: var(--muted); }
 </style>
 <style>
 /* ═══ 05 · OUTREACH ═══════════════════════════════════════════════ */
@@ -694,6 +768,106 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .oc-card h3 { margin: 12px 0 10px; font-size: 18px; }
 .oc-card p { color: var(--muted); font-size: 14px; margin: 0; }
 
+/* ═══ 06 · SPONSORSHIP — funds, tiers, how to donate ══════════════ */
+.funds, .tiers, .give { margin-top: clamp(34px, 4.4vw, 58px); }
+.funds-head, .tiers-head, .give h3 {
+  font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 30px);
+  letter-spacing: .02em; color: var(--fg); margin: 0;
+}
+.funds-lead, .tiers-lead { color: var(--muted); font-size: 15px; margin: 12px 0 0; max-width: 68ch; }
+
+/* ── where the money goes ─────────────────────────────────────── */
+.funds-grid {
+  list-style: none; margin: clamp(22px, 2.6vw, 32px) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;
+}
+.fund-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: clamp(20px, 2.2vw, 28px); position: relative; overflow: hidden;
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.fund-card::before { content: ''; position: absolute; top: 0; left: 0; width: 44px; height: 2px; background: var(--accent); }
+.fund-card:hover { border-color: var(--gold-bright); box-shadow: 0 22px 50px color-mix(in oklab, var(--bg) 72%, transparent), 0 0 36px color-mix(in oklab, var(--p2) 20%, transparent); }
+/* the heading is now the first element in the card, so it carries the
+   top margin the icon used to provide */
+.fund-card h4 { font-size: clamp(17px, 1.7vw, 21px); margin: 6px 0 8px; color: var(--fg); letter-spacing: .02em; }
+.fund-card p { color: var(--muted); font-size: 13.5px; margin: 0; line-height: 1.6; }
+/* the fifth card would sit alone on its row — let it span so the grid
+   reads as a deliberate 3 + 2 block rather than a ragged orphan */
+.funds-grid > li:last-child:nth-child(3n + 2) { grid-column: span 2; }
+
+/* ── sponsorship tiers ────────────────────────────────────────── */
+.tiers-grid {
+  list-style: none; margin: clamp(22px, 2.6vw, 32px) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;
+  align-items: stretch;
+}
+.tier {
+  display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: clamp(22px, 2.4vw, 30px); position: relative; height: 100%;
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease), transform .35s var(--ease);
+}
+.tier:hover { border-color: var(--gold-bright); transform: translateY(-3px); box-shadow: 0 26px 60px color-mix(in oklab, var(--bg) 74%, transparent), 0 0 40px color-mix(in oklab, var(--p2) 22%, transparent); }
+.tier-badge { font-size: 12px; letter-spacing: .34em; color: var(--gold-line); margin-bottom: 12px; }
+.tier-name { font-family: var(--font-display); font-size: clamp(17px, 1.7vw, 22px); letter-spacing: .09em; text-transform: uppercase; margin: 0; color: var(--fg); }
+.tier-amt { display: block; font-family: var(--font-display); font-size: clamp(26px, 2.8vw, 38px); color: var(--accent); margin: 10px 0 18px; }
+.tier-amt i { font-style: normal; font-size: .5em; vertical-align: super; margin-left: 2px; }
+.tier-perks { list-style: none; margin: 0; padding: 18px 0 0; border-top: 1px solid var(--border); display: grid; gap: 10px; }
+.tier-perks li { color: var(--muted); font-size: 13.5px; line-height: 1.55; padding-left: 18px; position: relative; }
+.tier-perks li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border: 1px solid var(--gold-line); transform: rotate(45deg); }
+/* the promoted tier is lifted, not just tinted */
+.tier-feature { border-color: var(--gold-line); background: radial-gradient(70% 60% at 50% 0%, color-mix(in oklab, var(--p1) 24%, transparent), transparent 72%), var(--panel); }
+.tier-flag {
+  position: absolute; top: -1px; right: -1px;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--bg); background: var(--accent); padding: 5px 10px;
+  border-bottom-left-radius: var(--radius);
+}
+.tiers-note { margin: 20px 0 0; font-size: 13.5px; color: var(--muted); }
+.tiers-note a { color: var(--accent); text-underline-offset: 3px; }
+
+/* ── how to donate ────────────────────────────────────────────── */
+.give {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(24px, 3.4vw, 52px); align-items: start;
+  padding: clamp(26px, 3.2vw, 42px);
+  background: radial-gradient(62% 76% at 14% 12%, color-mix(in oklab, var(--p1) 22%, transparent), transparent 70%), var(--panel);
+  border: 1px solid var(--border); border-radius: var(--radius); position: relative;
+}
+.give::before { content: ''; position: absolute; top: 0; left: 0; width: 110px; height: 2px; background: var(--accent); }
+.give-head p { color: var(--muted); font-size: 14.5px; line-height: 1.65; margin: 14px 0 0; max-width: 46ch; }
+.give-head .btn { margin-top: 24px; }
+.give-steps { margin: 0; padding: 0; list-style: none; counter-reset: give; display: grid; gap: 2px; }
+.give-steps li {
+  counter-increment: give; position: relative;
+  padding: 14px 0 14px 52px; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 14px; line-height: 1.6;
+}
+.give-steps li:first-child { border-top: 0; padding-top: 4px; }
+.give-steps li::before {
+  content: counter(give);
+  position: absolute; left: 0; top: 14px;
+  width: 30px; height: 30px; display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+  border: 1px solid var(--gold-line); border-radius: 50%;
+}
+.give-steps li:first-child::before { top: 4px; }
+.give-steps b { color: var(--fg); font-weight: 600; }
+.give-steps em { color: var(--accent); font-style: normal; }
+.give-steps a { color: var(--accent); text-underline-offset: 3px; word-break: break-word; }
+
+@media (max-width: 1080px) {
+  .funds-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .funds-grid > li:last-child:nth-child(3n + 2) { grid-column: span 2; }
+  .tiers-grid { grid-template-columns: 1fr; }
+  .give { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .funds-grid { grid-template-columns: 1fr; }
+  .funds-grid > li:last-child:nth-child(3n + 2) { grid-column: auto; }
+}
+
 /* ═══ 06 · CONTACT + FOOTER ═══════════════════════════════════════ */
 .contact { text-align: center; overflow: hidden; }
 .contact-glow {
@@ -708,9 +882,53 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 .contact-lead { margin-inline: auto; text-align: center; }
 .contact-inner .btn { margin-top: 34px; }
 .contact-mail { margin: 18px 0 0; font-size: 12px; letter-spacing: .16em; color: var(--muted); }
+
+/* ── SPONSORS — sits under the contact CTA ──────────────────────────── */
+.sponsors { width: 100%; margin-top: clamp(48px, 6vw, 80px); padding-top: clamp(30px, 4vw, 46px); border-top: 1px solid var(--border); }
+.sponsors-head {
+  font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 30px);
+  letter-spacing: .09em; text-transform: uppercase; color: var(--fg); margin: 0;
+}
+.sponsors-lead { color: var(--muted); font-size: 14px; margin: 12px 0 0; }
+.sponsors-grid {
+  /* auto-fit, not repeat(4): with one sponsor the old 4-up grid left the
+     logo stranded in the left column with three empty slots beside it. */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 300px));
+  justify-content: center;
+  gap: 18px; margin-top: clamp(24px, 3vw, 36px);
+}
+.sponsor-slot {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  min-height: 150px; padding: 26px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--panel);
+  text-decoration: none;
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease), transform .35s var(--ease);
+}
+.sponsor-slot:hover,
+.sponsor-slot:focus-visible {
+  border-color: var(--gold-bright);
+  box-shadow: 0 22px 50px color-mix(in oklab, var(--bg) 72%, transparent), 0 0 36px color-mix(in oklab, var(--p2) 20%, transparent);
+  transform: translateY(-2px);
+}
+/* the logo sits on a light plate: GSSM's mark is white-on-transparent, so
+   on the dark panel the text would vanish. The plate gives it a ground
+   without altering the artwork's own colours. */
+.sponsor-logo {
+  display: block; width: 100%; max-width: 210px; height: auto;
+  background: #FFFFFF; border-radius: 2px; padding: 12px 16px;
+}
+.sponsor-name { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.5; }
+.sponsors-note { margin: 22px 0 0; font-size: 13px; color: var(--muted); }
+.sponsors-note a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (max-width: 1080px) {
+  .sponsors-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 280px)); }
+}
 .pagefoot { position: relative; z-index: 2; border-top: 1px solid var(--border); padding: clamp(40px, 5vw, 70px) 0 30px; background: color-mix(in oklab, var(--bg) 82%, transparent); }
 .foot-top { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-start; padding-bottom: 30px; border-bottom: 1px solid var(--border); }
-.foot-word { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 30px); letter-spacing: .18em; color: var(--fg); }
+.foot-word { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 30px); letter-spacing: .10em; color: var(--fg); }
 .foot-sub { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
 .foot-nav { display: flex; flex-wrap: wrap; gap: 18px; }
 .foot-nav a { font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; color: var(--muted); transition: color .25s var(--ease); }
@@ -726,10 +944,16 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 /* ═══ responsive — ≤920px ═════════════════════════════════════════ */
 @media (max-width: 1080px) {
   .profile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .honours { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .callout.c2, .callout.c4 { display: none; }
 }
-@media (max-width: 920px) {
+/* Every other breakpoint on this page keys off WIDTH alone, which a
+   phone held in landscape defeats: 844x390 and 932x430 are both wider
+   than the 920px line, so those devices were being served the full
+   desktop layout — two-column hero, horizontal nav, multi-across
+   grids. A coarse pointer plus a short viewport is the unambiguous
+   signature of a landscape phone, and it cannot match a desktop window
+   (fine pointer), so the desktop layout is untouched at every size. */
+@media (max-width: 920px), (pointer: coarse) and (max-height: 560px) {
   .nav { padding-top: 12px; }
   .nav-toggle { display: block; }
   .nav-links {
@@ -743,33 +967,25 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   }
   .nav-shell { position: relative; }
   .nav.is-open .nav-links { display: flex; }
-  .nav-link { padding: 13px 12px; font-size: 12px; }
+  .nav-link { padding: 15px 12px; font-size: 12px; }   /* ~45px tap target */
   .nav-link::after { left: 12px; right: auto; width: 22px; }
 
   .hero { padding-top: 126px; min-height: auto; }
   .hero-inner { grid-template-columns: 1fr; gap: 34px; }
-  .hero-copy { order: 2; }
-  .hero-sword { order: 1; min-height: 400px; }
   .wordmark { font-size: clamp(34px, 12.5vw, 72px); letter-spacing: .01em; }
   .hero-tag { letter-spacing: .34em; font-size: 11px; }
   .hero-readout > div { padding-right: 24px; }
-  .hero-coord { display: none; }
 
   .sec-head { grid-template-columns: 1fr; gap: 14px; padding-bottom: 22px; }
   .sec-tag { justify-self: start; }
-  .sec-num { font-size: 32px; }
 
-  .lead-profile { grid-template-columns: 1fr; }
+  /* captains drop to two-up, then one-up, as the row narrows. The card
+     itself is a flex column now, so there is no inner grid to collapse. */
+  .captains-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .profile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .profile-card .profile-media img { aspect-ratio: 4 / 5; }
 
-  .tl-card.has-media { grid-template-columns: 1fr; }
-  .tl-step { padding-left: 34px; }
-  .tl-step::before { left: 8px; }
-  .tl-node { width: 16px; height: 16px; top: 18px; }
 
-  .dash { grid-template-columns: 1fr; }
-  .honours { grid-template-columns: 1fr; }
 
 
   .callouts { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 24px; }
@@ -777,7 +993,6 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   .callout .callout-line { width: 22px !important; }
   .callout .callout-text { align-items: flex-start !important; padding-left: 8px !important; padding-right: 0 !important; }
   .dim-line, .coord-mark { display: none; }
-  .machine-specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .outreach-band { grid-template-columns: 1fr; }
   .ob-figure { min-height: 250px; }
@@ -787,11 +1002,144 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   .foot-top { flex-direction: column; }
 }
 @media (max-width: 560px) {
-  .profile-grid { grid-template-columns: 4fr; }
-  .machine-specs { grid-template-columns: 1fr; }
+  .captains-grid { grid-template-columns: 1fr; }
+  .profile-grid { grid-template-columns: 1fr; }
   .hero-cta .btn { width: 100%; justify-content: center; }
-  .sword-cap { font-size: 9px; letter-spacing: .18em; }
-  .hero-sword { min-height: 330px; }
+}
+</style>
+<style>
+/* ═══ MOTION PASS — subtle life across the page ════════════════════
+   Ambient loops and the one-shot hero entrance are gated behind
+   prefers-reduced-motion: no-preference; hover and press feedback
+   are user-initiated and stay on. State changes use the site's
+   --ease; idle loops use ease-in-out at long durations, so nothing
+   calls for attention. */
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(16px); filter: blur(10px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 12px var(--accent); }
+  50%      { opacity: .45; box-shadow: 0 0 3px  var(--accent); }
+}
+@keyframes glyph-spin { to { transform: rotate(360deg); } }
+@keyframes glow-breathe   { from { opacity: .68; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
+@keyframes glow-breathe-c { from { opacity: .68; transform: translate(-50%, -50%) scale(1); } to { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+@keyframes callout-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.65); opacity: .5; } }
+@keyframes menu-in { from { opacity: 0; transform: translateY(-6px); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* idle ambient loops — slow, low-contrast, never attention-grabbing */
+  .eyebrow-dot  { animation: dot-pulse 2.8s ease-in-out infinite; }
+  .nav-glyph    { animation: glyph-spin 60s linear infinite; }
+  .mach-glow    { animation: glow-breathe 7s ease-in-out infinite alternate; }
+  .contact-glow { animation: glow-breathe-c 9s ease-in-out infinite alternate; }
+  .callout-dot  { animation: callout-pulse 3.2s ease-in-out infinite; }
+  .callout.c2 .callout-dot { animation-delay: .8s; }
+  .callout.c3 .callout-dot { animation-delay: 1.6s; }
+  .callout.c4 .callout-dot { animation-delay: 2.4s; }
+
+  /* hero: one-shot staged entrance, ~90ms stagger top to bottom */
+  .hero-copy > * { animation: rise-in .9s var(--ease) both; }
+  .hero-copy > :nth-child(1) { animation-delay: .05s; }
+  .hero-copy > :nth-child(2) { animation-delay: .14s; }
+  .hero-copy > :nth-child(3) { animation-delay: .23s; }
+  .hero-copy > :nth-child(4) { animation-delay: .32s; }
+  .hero-copy > :nth-child(5) { animation-delay: .41s; }
+  .hero-copy > :nth-child(6) { animation-delay: .5s; }
+
+  /* mobile menu settles in softly when it opens */
+  .nav.is-open .nav-links { animation: menu-in .28s var(--ease); }
+}
+
+/* section headers: the gold rule draws in just after the header fades */
+.sec-head::after {
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 1.1s var(--ease) .25s;
+}
+.sec-head.in::after { transform: scaleX(1); }
+
+/* reveals extended to the previously static surfaces. Elements that
+   already own a border/shadow transition get a merged list here, so
+   the opacity/filter fade and the hover states keep their own easing
+   (previously the base hover transition overrode the reveal one and
+   these cards would pop in). */
+.machine-figure, .robot-awards, .give {
+  opacity: 0; filter: blur(6px);
+  transition: opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
+}
+.fund-card, .alumni-card {
+  opacity: 0; filter: blur(6px);
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease),
+              opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
+}
+.tier, .sponsor-slot {
+  opacity: 0; filter: blur(6px);
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease), transform .35s var(--ease),
+              opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
+}
+.lead-profile, .profile-card, .oc-card {
+  transition: border-color .35s var(--ease), box-shadow .35s var(--ease), transform .35s var(--ease),
+              opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
+}
+
+/* micro-interactions */
+/* cards lift a hair on hover — the same gesture the tiers already use */
+.lead-profile:hover, .profile-card:hover, .alumni-card:hover,
+.oc-card:hover, .fund-card:hover { transform: translateY(-3px); }
+
+/* portraits settle into a barely-there zoom on hover */
+.ph-img > img, .ph-img > picture > img { transition: transform .8s var(--ease); }
+.lead-profile:hover .ph-img > img, .lead-profile:hover .ph-img > picture > img,
+.profile-card:hover .ph-img > img, .profile-card:hover .ph-img > picture > img,
+.oc-card:hover .ph-img > img, .oc-card:hover .ph-img > picture > img,
+.ob-figure:hover .ph-img > img, .ob-figure:hover .ph-img > picture > img { transform: scale(1.04); }
+</style>
+<style>
+/* ═══ touch ergonomics — coarse pointers only ══════════════════════
+   Everything in this block is gated on `pointer: coarse`, so no desktop
+   browser can match a single rule here — the desktop rendering is
+   untouched by construction rather than by promise.
+
+   `env(safe-area-inset-*)` only resolves to anything other than 0
+   because the head declares `viewport-fit=cover`; that is what lets the
+   dark atmosphere run edge-to-edge under the notch and the home
+   indicator instead of stopping short of them. On a device without
+   insets, every value below collapses to the spacing that was already
+   there. */
+
+/* ── tap targets ───────────────────────────────────────────────────
+   The hit area grows while the layout stays put: the padding adds the
+   target and the matching negative margin hands the space straight
+   back, so nothing on screen moves. Links that sit inside a sentence
+   are left alone — their spacing is the typography, and inline text is
+   exempt from the 44px guidance. */
+@media (pointer: coarse) {
+  .foot-nav { gap: 6px 18px; }
+  .foot-nav a { padding: 14px 8px; margin: -14px -8px; }
+  .nav-brand { min-height: 44px; }
+}
+
+/* ── safe areas ────────────────────────────────────────────────────
+   The nav is fixed, so the top inset has to be added in whatever form
+   the current breakpoint already uses (12px under 920, 18px above),
+   including the scrolled state, which sets its own padding-top. */
+@media (pointer: coarse) {
+  html { -webkit-text-size-adjust: 100%; }
+  .nav { padding-left: max(var(--gutter), env(safe-area-inset-left));
+         padding-right: max(var(--gutter), env(safe-area-inset-right)); }
+  .hero { padding-bottom: calc(48px + env(safe-area-inset-bottom)); }
+  .pagefoot { padding-bottom: calc(30px + env(safe-area-inset-bottom)); }
+  .roster-status { bottom: calc(clamp(18px, 3vw, 34px) + env(safe-area-inset-bottom)); }
+}
+@media (pointer: coarse) and (max-width: 920px) {
+  .nav { padding-top: max(12px, env(safe-area-inset-top)); }
+  .nav.is-scrolled { padding-top: max(10px, env(safe-area-inset-top)); }
+}
+@media (pointer: coarse) and (min-width: 921px) {
+  .nav { padding-top: max(18px, env(safe-area-inset-top)); }
+  .nav.is-scrolled { padding-top: max(10px, env(safe-area-inset-top)); }
 }
 </style>
 </head>
@@ -801,7 +1149,6 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 <div class="bg" aria-hidden="true">
   <div class="bg-layer bg-base"></div>
   <div class="bg-layer bg-aurora"></div>
-  <canvas class="bg-layer" id="particles"></canvas>
   <div class="bg-layer bg-vignette"></div>
 </div>
 
@@ -819,9 +1166,8 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
       <a href="#top" class="nav-link active">HOME</a>
       <a href="#team" class="nav-link">TEAM</a>
       <a href="#robot" class="nav-link">ROBOT</a>
-      <a href="#build" class="nav-link">BUILD</a>
-      <a href="#achievements" class="nav-link">ACHIEVEMENTS</a>
       <a href="#outreach" class="nav-link">OUTREACH</a>
+      <a href="#support" class="nav-link">SPONSOR</a>
       <a href="#contact" class="nav-link">CONTACT</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -852,24 +1198,6 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
       </dl>
     </div>
 
-    <!-- Sword centerpiece — real 1902 Howard Pyle artwork (public domain),
-         engineered into a CAD frame + energy field + plinth -->
-    <figure class="hero-sword" data-od-id="hero-sword">
-      <div class="sword-stage">
-        <div class="ph-img" role="img" aria-label="Placeholder image slot — 01 / SWORD SLOT" style="--ar:793/1200"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">01 / SWORD SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
-        <div class="sword-glow" aria-hidden="true"></div>
-      </div>
-      <div class="sword-plinth" aria-hidden="true">
-        <span class="plinth-top"></span>
-        <span class="plinth-face"></span>
-        <span class="plinth-edge"></span>
-      </div>
-      <figcaption class="sword-cap">EX-01 · ANCHOR ASSEMBLY</figcaption>
-    </figure>
-  </div>
-
-  <div class="hero-foot">
-    <span class="hero-coord num">47.6062° N · 122.3321° W</span>
   </div>
 </section>
 
@@ -877,7 +1205,6 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 <section class="section" id="team" data-od-id="team">
   <div class="container">
     <header class="sec-head">
-      <span class="sec-num num">01</span>
       <div>
         <h2>Meet the Team </h2>
 	<p class="lead">Led by South Carolina Governor's School for Science and Math students.</p>
@@ -888,10 +1215,22 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 
     <h1 class="member-header"> Members: </h1>
 
+    <!-- Captains sit three across as portrait panels, taller than they are
+         wide, matching the roster cards' proportions. -->
+    <div class="captains-grid">
+
     <!--Trey Hill's Card-->
     <article class="lead-profile" data-od-id="team-lead-trey">
       <div class="profile-media">
-        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <img src="IMG_3115.jpg">
+        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <picture>
+            <source type="image/avif" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                    srcset="img/IMG_3115-480.avif 480w, img/IMG_3115-960.avif 960w, img/IMG_3115-1280.avif 1280w, img/IMG_3115-1600.avif 1600w">
+            <source type="image/webp" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                    srcset="img/IMG_3115-480.webp 480w, img/IMG_3115-960.webp 960w, img/IMG_3115-1280.webp 1280w, img/IMG_3115-1600.webp 1600w">
+            <img src="img/IMG_3115-960.jpg" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                 srcset="img/IMG_3115-480.jpg 480w, img/IMG_3115-960.jpg 960w, img/IMG_3115-1280.jpg 1280w, img/IMG_3115-1600.jpg 1600w"
+                 alt="">
+          </picture>
 		<span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
       </div>
       <div class="profile-body">
@@ -900,8 +1239,8 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
         <p> OnShape Demon. </p>
         <dl class="spec-list">
           <div><dt>Class: </dt><dd> 2027 </dd></div>
-         <!-- <div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
-	 <div><dt>DOLOR</dt><dd class="num">00</dd></div> -->
+          <!--<div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
+          <div><dt>DOLOR</dt><dd class="num">00</dd></div>-->
         </dl>
         <span class="id-chip num">EX-P-001</span>
       </div>
@@ -910,7 +1249,15 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     <!--Sanjey R. Card-->
     <article class="lead-profile" data-od-id="team-lead-sanjey">
       <div class="profile-media">
-        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <img src="IMG_3115.jpg">
+        <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <picture>
+            <source type="image/avif" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                    srcset="img/IMG_3115-480.avif 480w, img/IMG_3115-960.avif 960w, img/IMG_3115-1280.avif 1280w, img/IMG_3115-1600.avif 1600w">
+            <source type="image/webp" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                    srcset="img/IMG_3115-480.webp 480w, img/IMG_3115-960.webp 960w, img/IMG_3115-1280.webp 1280w, img/IMG_3115-1600.webp 1600w">
+            <img src="img/IMG_3115-960.jpg" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                 srcset="img/IMG_3115-480.jpg 480w, img/IMG_3115-960.jpg 960w, img/IMG_3115-1280.jpg 1280w, img/IMG_3115-1600.jpg 1600w"
+                 alt="">
+          </picture>
 		<span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
       </div>
       <div class="profile-body">
@@ -920,16 +1267,24 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
         <dl class="spec-list">
           <div><dt>Class: </dt><dd> 2027</dd></div>
           <!--<div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
-	  <div><dt>DOLOR</dt><dd class="num">00</dd></div>
+          <div><dt>DOLOR</dt><dd class="num">00</dd></div>-->
         </dl>
-	<span class="id-chip num">EX-P-002</span>-->
+        <span class="id-chip num">EX-P-002</span>
       </div>
     </article>
 
     <!-- Lamont Hargraves Card -->
     <article class="lead-profile" data-od-id="team-lead-royce">
       <div class="profile-media">
-	      <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <img src="IMG_3115.jpg">
+	      <div class="ph-img" role="img" aria-label="Placeholder image slot — 02 / PORTRAIT SLOT" style="--ar:1400/933" > <picture>
+            <source type="image/avif" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                    srcset="img/IMG_3115-480.avif 480w, img/IMG_3115-960.avif 960w, img/IMG_3115-1280.avif 1280w, img/IMG_3115-1600.avif 1600w">
+            <source type="image/webp" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                    srcset="img/IMG_3115-480.webp 480w, img/IMG_3115-960.webp 960w, img/IMG_3115-1280.webp 1280w, img/IMG_3115-1600.webp 1600w">
+            <img src="img/IMG_3115-960.jpg" sizes="(max-width: 560px) 167vw, (max-width: 1080px) 84vw, 634px"
+                 srcset="img/IMG_3115-480.jpg 480w, img/IMG_3115-960.jpg 960w, img/IMG_3115-1280.jpg 1280w, img/IMG_3115-1600.jpg 1600w"
+                 alt="">
+          </picture>
 		       <span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div> 
       </div>
       <div class="profile-body">
@@ -939,18 +1294,24 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
         <dl class="spec-list">
           <div><dt>Class: </dt><dd> 2027 </dd></div>
           <!--<div><dt>IPSUM</dt><dd>Consectetur · Elit · Sed</dd></div>
-          <div><dt>DOLOR</dt><dd class="num">00</dd></div>
+          <div><dt>DOLOR</dt><dd class="num">00</dd></div>-->
         </dl>
-	<span class="id-chip num">EX-P-003</span> -->
+        <span class="id-chip num">EX-P-003</span>
       </div>
     </article>
 
+    </div><!-- /.captains-grid -->
 
 
-    <!-- The roster is the page's one 3D gallery. The four cards below are
-         the real list: WebGL renders them flying through space on scroll,
-         and if there is no WebGL (or the visitor prefers reduced motion)
-         they simply remain the flat, fully readable grid. -->
+
+    <!-- The roster is the page's one 3D gallery. The cards below are the
+         real list: WebGL renders them as a four-across wall scrolling by
+         row, and if there is no WebGL (or the visitor prefers reduced
+         motion) they simply remain the flat, fully readable grid.
+
+         `--roster-n` is the number of ROWS, since the wall scrolls by
+         row: 13 cards over 4 columns = 4 rows, and each row earns a
+         viewport of travel. -->
     <div class="roster" id="roster" style="--roster-n: 4">
       <div class="roster-view">
         <div class="roster-stage" id="roster-stage" aria-hidden="true"></div>
@@ -1127,25 +1488,94 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
       </article>
 
 
-      <article class="profile-card profile-card-note" data-od-id="team-card-open">
-        <div class="profile-note">
-          <span class="profile-role">0+ e</span>
-          <h3 class="profile-name">Tempor</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <a class="btn btn-ghost btn-arrow" href="#contact">Lorem ipsum</a>
-        </div>
-      </article>
       </div><!-- /.roster-grid -->
     </div><!-- /.roster -->
 
     <h2 class="alumni-header"> Alumni: </h2>
 
-
+    <!-- Two rows of four. Placeholders for now: the people and photos are
+         not available yet, so each slot carries the same labelled
+         placeholder the roster cards use. -->
     <div class="alumni-grid">
-	    <div class="alumni-card">
-		
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
 
-	    </div>
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
+
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
+
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
+
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
+
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
+
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
+
+      <article class="alumni-card">
+        <div class="profile-media">
+          <div class="ph-img" role="img" aria-label="Alumni portrait placeholder" style="--ar:600/900"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">ALUMNI / PORTRAIT SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        </div>
+        <div class="alumni-meta">
+          <span class="alumni-role">Alumni</span>
+          <span class="alumni-name">Name TBD</span>
+        </div>
+      </article>
     </div>
 
 
@@ -1159,10 +1589,9 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 <section class="section machine" id="robot" data-od-id="robot">
   <div class="container">
     <header class="sec-head">
-      <span class="sec-num num">02</span>
       <div>
-        <h2>Robots</h2>
-        <p class="lead"> Our Current and Past builds </p>
+        <h2>Phoenix</h2>
+        <p class="lead">Our 2025–26 <em>DECODE</em> robot — Inspire Award winner at the regional competition and Control Award winner at the South Carolina State Championship.</p>
       </div>
       <span class="sec-tag">22972</span>
     </header>
@@ -1193,159 +1622,36 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
       </div>
     </div>
 
-    <dl class="machine-specs" data-od-id="robot-specs">
-      <div><dt>Events</dt><dd>Coming soon</dd></div>
-      <div><dt>Strengths</dt><dd class="num">Coming soon</dd></div>
-      <div><dt>Guh</dt><dd>Consectetur adipiscing</dd></div>
-      <div><dt>SIT AMET</dt><dd class="num">00.0 unit</dd></div>
-    </dl>
-  </div>
-</section>
-
-<!-- ═══ 03 · BUILD ═══ -->
-<section class="section build" id="build" data-od-id="build">
-  <div class="container">
-    <header class="sec-head">
-      <span class="sec-num num">03</span>
-      <div>
-        <h2>Lorem ipsum dolor sit amet</h2>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      </div>
-      <span class="sec-tag">CONSECTETUR</span>
-    </header>
-
-    <ol class="timeline" data-od-id="build-timeline">
-      <li class="tl-step">
-        <span class="tl-node" aria-hidden="true"></span>
-        <div class="tl-card">
-          <span class="tl-num num">01</span>
-          <h3>LOREM</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <span class="tl-meta">WEEK 01–02</span>
-        </div>
-      </li>
-      <li class="tl-step">
-        <span class="tl-node" aria-hidden="true"></span>
-        <div class="tl-card">
-          <span class="tl-num num">02</span>
-          <h3>IPSUM</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <span class="tl-meta">WEEK 02–04</span>
-        </div>
-      </li>
-      <li class="tl-step">
-        <span class="tl-node" aria-hidden="true"></span>
-        <div class="tl-card has-media">
-          <div>
-            <span class="tl-num num">03</span>
-            <h3>DOLOR</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <span class="tl-meta">WEEK 04–07</span>
-          </div>
-          <figure class="tl-fig">
-            <div class="ph-img" role="img" aria-label="Placeholder image slot — 07 / BUILD SLOT" style="--ar:1700/916"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">07 / BUILD SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
-          </figure>
-        </div>
-      </li>
-      <li class="tl-step">
-        <span class="tl-node" aria-hidden="true"></span>
-        <div class="tl-card has-media">
-          <div>
-            <span class="tl-num num">04</span>
-            <h3>SIT AMET</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <span class="tl-meta">WEEK 07–10</span>
-          </div>
-          <figure class="tl-fig">
-            <div class="ph-img" role="img" aria-label="Placeholder image slot — 08 / BUILD SLOT" style="--ar:1700/1133"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">08 / BUILD SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
-          </figure>
-        </div>
-      </li>
-      <li class="tl-step">
-        <span class="tl-node" aria-hidden="true"></span>
-        <div class="tl-card has-media">
-          <div>
-            <span class="tl-num num">05</span>
-            <h3>CONSECTETUR</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <span class="tl-meta">WEEK 10–11</span>
-          </div>
-          <figure class="tl-fig">
-            <div class="ph-img" role="img" aria-label="Placeholder image slot — 09 / BUILD SLOT" style="--ar:1700/969"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">09 / BUILD SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
-          </figure>
-        </div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ═══ 04 · ACHIEVEMENTS ═══ -->
-<section class="section achievements" id="achievements" data-od-id="achievements">
-  <div class="container">
-    <header class="sec-head">
-      <span class="sec-num num">04</span>
-      <div>
-        <h2>Lorem ipsum dolor</h2>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      </div>
-      <span class="sec-tag">ADIPISCING</span>
-    </header>
-
-    <div class="dash" data-od-id="achievements-dashboard">
-      <div class="dash-lead">
-        <span class="dash-cap">LOREM IPSUM</span>
-        <span class="dash-big num" data-count="3" data-suffix="+">0</span>
-        <p class="dash-note">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      </div>
-      <div class="dash-side">
-        <div class="dash-cell">
-          <span class="dash-cap">DOLOR SIT</span>
-          <span class="dash-num num" data-count="11">0</span>
-          <span class="dash-bar"><i style="--w: 72%"></i></span>
-        </div>
-        <div class="dash-cell">
-          <span class="dash-cap">AMET ELIT</span>
-          <span class="dash-num num" data-count="7">0</span>
-          <span class="dash-bar"><i style="--w: 46%"></i></span>
-        </div>
-        <div class="dash-cell">
-          <span class="dash-cap">SED DO EIUSMOD</span>
-          <span class="dash-num num" data-count="240" data-suffix="+">0</span>
-          <span class="dash-bar"><i style="--w: 88%"></i></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="honours" data-od-id="achievements-list">
-      <article class="honour">
-        <span class="honour-year num">2026</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <span class="honour-meta">LOREM IPSUM · DOLOR</span>
-      </article>
-      <article class="honour">
-        <span class="honour-year num">2025</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <span class="honour-meta">LOREM IPSUM · DOLOR</span>
-      </article>
-      <article class="honour">
-        <span class="honour-year num">2025</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <span class="honour-meta">LOREM IPSUM · DOLOR</span>
-      </article>
-      <article class="honour">
-        <span class="honour-year num">2024</span>
-        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h3>
-        <span class="honour-meta">LOREM IPSUM · DOLOR</span>
-      </article>
+    <!-- Achievements live with the robot: the awards belong to Phoenix
+         and to the season it ran. Listed compactly rather than given a
+         section of their own. -->
+    <div class="robot-awards" data-od-id="robot-awards">
+      <h3 class="robot-awards-head">2025–26 · <em>DECODE</em> season</h3>
+      <ul class="robot-awards-list">
+        <li>
+          <span class="ra-award">Inspire Award</span>
+          <span class="ra-where">Regional Competition · highest regional honour</span>
+        </li>
+        <li>
+          <span class="ra-award">Control Award</span>
+          <span class="ra-where">State Championship · sensors and programming</span>
+        </li>
+        <li>
+          <span class="ra-award">State Championship Advancement</span>
+          <span class="ra-where">2026</span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
+
+
+
 
 <!-- ═══ 05 · OUTREACH ═══ -->
 <section class="section outreach" id="outreach" data-od-id="outreach">
   <div class="container">
     <header class="sec-head">
-      <span class="sec-num num">05</span>
       <div>
         <h2>Outreach</h2>
         <p class="lead">We don't want to just succeed ourselves. We want to help spread the love of STEM and help other teams reach success. </p>
@@ -1355,7 +1661,15 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 
     <div class="outreach-band" data-od-id="outreach-hero">
       <figure class="ob-figure">
-        <div class="ph-img" role="img" aria-label="Placeholder image slot — 10 / OUTREACH SLOT" style="--ar:1300/867"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">10 / OUTREACH SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+        <div class="ph-img" role="img" aria-label="Excalibur team mentoring FTC 37033 Lucky Cowboys" style="--ar:1300/867"><picture>
+            <source type="image/avif" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 55vw, 700px"
+                    srcset="img/92415ebd-3534-4c94-9191-896d8cabd3a9-480.avif 480w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-960.avif 960w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-1280.avif 1280w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-1600.avif 1600w">
+            <source type="image/webp" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 55vw, 700px"
+                    srcset="img/92415ebd-3534-4c94-9191-896d8cabd3a9-480.webp 480w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-960.webp 960w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-1280.webp 1280w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-1600.webp 1600w">
+            <img src="img/92415ebd-3534-4c94-9191-896d8cabd3a9-960.jpg" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 55vw, 700px"
+                 srcset="img/92415ebd-3534-4c94-9191-896d8cabd3a9-480.jpg 480w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-960.jpg 960w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-1280.jpg 1280w, img/92415ebd-3534-4c94-9191-896d8cabd3a9-1600.jpg 1600w"
+                 alt="Team members mentoring the Lucky Cowboys">
+          </picture><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
         <span class="ob-blend" aria-hidden="true"></span>
         <span class="ob-highlight" aria-hidden="true"></span>
       </figure>
@@ -1363,14 +1677,22 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
         <span class="ob-cap num">01</span>
         <h3>Mentorship</h3>
         <p>We helped found FTC 37033 Lucky Cowboys in 2026. We currently mentor this team.</p>
-        <span class="ob-stat"><b class="num">0,000</b> lorem ipsum dolor sit</span>
+        <span class="ob-stat"><b class="num">1</b> team mentored &amp; founded</span>
       </div>
     </div>
 
     <div class="outreach-grid">
       <article class="oc-card" data-od-id="outreach-workshop">
         <figure class="oc-figure">
-          <div class="ph-img" role="img" aria-label="Placeholder image slot — 11 / OUTREACH SLOT" style="--ar:1500/996"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">11 / OUTREACH SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+          <div class="ph-img" role="img" aria-label="Students at a STEM day event" style="--ar:1500/996"><picture>
+            <source type="image/avif" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 50vw, 520px"
+                    srcset="img/20251118_123144-480.avif 480w, img/20251118_123144-960.avif 960w, img/20251118_123144-1280.avif 1280w, img/20251118_123144-1600.avif 1600w">
+            <source type="image/webp" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 50vw, 520px"
+                    srcset="img/20251118_123144-480.webp 480w, img/20251118_123144-960.webp 960w, img/20251118_123144-1280.webp 1280w, img/20251118_123144-1600.webp 1600w">
+            <img src="img/20251118_123144-960.jpg" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 50vw, 520px"
+                 srcset="img/20251118_123144-480.jpg 480w, img/20251118_123144-960.jpg 960w, img/20251118_123144-1280.jpg 1280w, img/20251118_123144-1600.jpg 1600w"
+                 alt="Students taking part in a STEM day">
+          </picture><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
         </figure>
         <span class="oc-cap num">02 </span>
         <h3>STEM Days</h3>
@@ -1379,25 +1701,186 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 
       <article class="oc-card" data-od-id="outreach-fairs">
         <figure class="oc-figure">
-          <div class="ph-img" role="img" aria-label="Placeholder image slot — 12 / OUTREACH SLOT" style="--ar:1024/683"><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num">12 / OUTREACH SLOT</span><span class="ph-note">IMAGE PLACEHOLDER</span></div>
+          <div class="ph-img" role="img" aria-label="The robot on display at a Fort Mill museum" style="--ar:1024/683"><picture>
+            <source type="image/avif" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 50vw, 520px"
+                    srcset="img/IMG_8479-480.avif 480w, img/IMG_8479-960.avif 960w, img/IMG_8479-1280.avif 1280w, img/IMG_8479-1600.avif 1600w">
+            <source type="image/webp" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 50vw, 520px"
+                    srcset="img/IMG_8479-480.webp 480w, img/IMG_8479-960.webp 960w, img/IMG_8479-1280.webp 1280w, img/IMG_8479-1600.webp 1600w">
+            <img src="img/IMG_8479-960.jpg" sizes="(max-width: 920px) 100vw, (max-width: 1400px) 50vw, 520px"
+                 srcset="img/IMG_8479-480.jpg 480w, img/IMG_8479-960.jpg 960w, img/IMG_8479-1280.jpg 1280w, img/IMG_8479-1600.jpg 1600w"
+                 alt="Our robot on show at a museum">
+          </picture><span class="ph-mark" aria-hidden="true"></span><span class="ph-label num"></span><span class="ph-note"></span></div>
         </figure>
         <span class="oc-cap num">03</span>
-        <h3>Musuem Visits</h3>
-        <p>We showcase our robot at a Fort Mill musuem.</p>
+        <h3>Museum Visits</h3>
+        <p>We showcase our robot at the Fort Mill museum.</p>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ═══ 06 · CONTACT ═══ -->
+<!-- ═══ 06 · SPONSORSHIP ═══ -->
+<section class="section support" id="support" data-od-id="support">
+  <div class="container">
+    <header class="sec-head">
+      <div>
+        <h2>Sponsorship</h2>
+        <p class="lead">Excalibur is student-run and funded entirely by sponsors. Every dollar goes directly into the robot, the season, and the outreach we do across South Carolina.</p>
+      </div>
+      <span class="sec-tag">22972</span>
+    </header>
+
+    <!-- ── WHERE YOUR FUNDS GO ────────────────────────────────────────
+         NOTE: these figures came from a template and one of them
+         ($15,000) breaks the descending order of the list. Confirm the
+         amounts before publishing. -->
+    <div class="funds" data-od-id="funds">
+      <h3 class="funds-head">Where your funds go</h3>
+      <p class="funds-lead">Our team needs a variety of funds that serve many different purposes to sustain a world-class competitive FTC robotics program.</p>
+
+      <ul class="funds-grid">
+        <li class="fund-card">
+          <h4>Travel &amp; Lodging</h4>
+          <p>Transportation, lodging, food and nutrition for State and World Championships.</p>
+        </li>
+        <li class="fund-card">
+          <h4>Mechanical Parts</h4>
+          <p>Precision vendor hardware from goBILDA, MISUMI, REV Robotics, and Amazon.</p>
+        </li>
+        <li class="fund-card">
+          <h4>Team Merchandise &amp; Accessories</h4>
+          <p>Team jerseys, stickers, hats, safety gear, and collectible competition pins.</p>
+        </li>
+        <li class="fund-card">
+          <h4>Handouts &amp; Posters</h4>
+          <p>Outreach documentation, team advertisements, and flyers for competitions.</p>
+        </li>
+        <li class="fund-card">
+          <h4>Filming Equipment</h4>
+          <p>Microphones, match cameras, and mounts or tripods for scouting and outreach media.</p>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── SPONSORSHIP TIERS ──────────────────────────────────────────
+         Recognition levels. Amounts are placeholders — set them to
+         whatever the team actually offers. -->
+    <div class="tiers" data-od-id="tiers">
+      <h3 class="tiers-head">Sponsorship tiers</h3>
+      <p class="tiers-lead">Recognition and benefits by giving level. Every sponsor is listed on this site, whatever the amount.</p>
+
+      <ul class="tiers-grid">
+        <li class="tier tier-1">
+          <span class="tier-badge" aria-hidden="true">◆</span>
+          <h4 class="tier-name">Bronze</h4>
+          <span class="tier-amt num">$250<i>+</i></span>
+          <ul class="tier-perks">
+            <li>Logo listed on the team website</li>
+            <li>Shout-out on team social media</li>
+          </ul>
+        </li>
+        <li class="tier tier-2">
+          <span class="tier-badge" aria-hidden="true">◆◆</span>
+          <h4 class="tier-name">Silver</h4>
+          <span class="tier-amt num">$1,000<i>+</i></span>
+          <ul class="tier-perks">
+            <li>Everything in Bronze</li>
+            <li>Logo on the robot and team jerseys</li>
+            <li>Named in our outreach materials</li>
+          </ul>
+        </li>
+        <li class="tier tier-3 tier-feature">
+          <span class="tier-flag">Most impactful</span>
+          <span class="tier-badge" aria-hidden="true">◆◆◆</span>
+          <h4 class="tier-name">Gold</h4>
+          <span class="tier-amt num">$5,000<i>+</i></span>
+          <ul class="tier-perks">
+            <li>Everything in Silver</li>
+            <li>Largest logo placement on the site and robot</li>
+            <li>Banner at our pit and outreach events</li>
+            <li>Invitation to meet the team</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── HOW TO DONATE ──────────────────────────────────────────────
+         STEP 5 IS A PLACEHOLDER: the pasted source said "Team #772
+         Golden Dragons", which is a DIFFERENT team. Confirm the correct
+         designation before this goes live, or the money is misdirected. -->
+    <div class="give" id="donate" data-od-id="donate">
+      <div class="give-head">
+        <h3>How to donate</h3>
+        <p>All donations are tax-deductible through the South Carolina Governor's School for Science &amp; Mathematics Foundation, a 501(c)(3) nonprofit.</p>
+        <a class="btn btn-primary btn-lg" href="https://scgssm.org/donate/" target="_blank" rel="noopener noreferrer">Donate via the GSSM Foundation</a>
+      </div>
+
+      <ol class="give-steps">
+        <li>Navigate to the official GSSM donation portal at <a href="https://scgssm.org/donate/" target="_blank" rel="noopener noreferrer">scgssm.org/donate</a>.</li>
+        <li>Select your desired donation amount and billing type — one-time or recurring.</li>
+        <li>Click the <em>“I want to support”</em> dropdown menu, and select <b>GSSM Robotics</b>.</li>
+        <li>Select whether you are donating on behalf of an organization, or prefer to remain anonymous.</li>
+        <li>In the <em>“Comment”</em> field, specify <b>“Team #22972 Excalibur”</b> as the designated recipient of your contribution.</li>
+        <li>Enter your contact and billing information to complete your payment.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 07 · CONTACT ═══ -->
 <section class="section contact" id="contact" data-od-id="cta-strip">
   <div class="contact-glow" aria-hidden="true"></div>
   <div class="container contact-inner">
     <p class="eyebrow">06</p>
     <h2 class="contact-head">Reach Out to Us</h2>
-    <p class="lead contact-lead">To help us with our mission, please support us.</p>
-    <a class="btn btn-primary btn-lg" href="mailto:22972excaliber@gmail.com">Contact Us</a>
-    <p class="contact-mail num"></p>
+    <p class="lead contact-lead">Questions, collaboration, or sponsorship interest — we'd like to hear from you.</p>
+    <a class="btn btn-primary btn-lg" href="mailto:22972excaliber@gmail.com">Email Us</a>
+    <p class="contact-mail num">22972excaliber@gmail.com</p>
+
+    <!-- Sponsors sit directly under the contact CTA: the ask and the
+         people who answered it belong together. Placeholder slots until
+         the real sponsor logos and links are available. -->
+    <div class="sponsors" id="sponsors">
+      <h2 class="sponsors-head">Sponsors</h2>
+      <p class="sponsors-lead">Our sponsors make the season possible. Thank you.</p>
+
+      <!-- The GSSM slots. Each is a link, so the logo is the hit target and
+           the name is carried for screen readers. External links get
+           target=_blank plus rel=noopener noreferrer: noopener stops the
+           opened page reaching back through window.opener, and noreferrer
+           keeps this page's URL out of their referrer log.
+
+           Both use GSSM's DARK-on-transparent artwork on a white plate.
+           The white-text variant on that same plate was invisible:
+           #FFFFFF on #FFFFFF measures 1.00:1 contrast. The dark wordmark
+           (#4D4D4D) on white is 8.45:1 -- comfortably past WCAG AA. -->
+      <div class="sponsors-grid">
+        <a class="sponsor-slot"
+           href="https://www.scgssm.org/"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="SC Governor's School for Science and Mathematics — opens their website in a new tab">
+          <img class="sponsor-logo"
+               src="gssm-logo-dark.svg"
+               alt="SC Governor's School for Science and Mathematics"
+               loading="lazy" decoding="async">
+          <span class="sponsor-name">SC Governor's School for Science &amp; Mathematics</span>
+        </a>
+
+        <a class="sponsor-slot"
+           href="https://www.scgssm.org/who-we-are/gssm-foundation"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="GSSM Foundation — opens their website in a new tab">
+          <img class="sponsor-logo"
+               src="img/foundation-480.png"
+               srcset="img/foundation-480.png 480w, img/foundation-960.png 960w"
+               sizes="210px"
+               alt="GSSM Foundation"
+               loading="lazy" decoding="async">
+          <span class="sponsor-name">GSSM Foundation</span>
+        </a>
+      </div>
+      <p class="sponsors-note">Interested in sponsoring Excalibur? <a href="mailto:22972excaliber@gmail.com">Get in touch</a>.</p>
+    </div>
   </div>
 </section>
 
@@ -1412,8 +1895,10 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
         <p class="foot-sub">Pulled from the Stone, Sharpened by the Mind</p>
       </div>
       <nav class="foot-nav" aria-label="Footer">
-        <a href="#team">Team</a><a href="#robot">Robot</a><a href="#build">Build</a>
-        <a href="#achievements">Achievements</a><a href="#outreach">Outreach</a>
+        <a href="#team">Team</a><a href="#robot">Robot</a>
+        <a href="#outreach">Outreach</a>
+        <a href="#support">Sponsorship</a>
+        <a href="#contact">Contact</a>
       </nav>
     </div>
     <div class="credits">
@@ -1423,8 +1908,8 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
       </ul>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Lorem Ipsum Dolor</span>
-      <span class="meta">LOREM IPSUM DOLOR · L0-00</span>
+      <span>© 2026 Team 22972 Excalibur</span>
+      <span class="meta">TEAM 22972 · EXCALIBUR</span>
     </div>
   </div>
 </footer>
@@ -1463,7 +1948,7 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 /* ── reveals ─────────────────────────────────────────────────────── */
 (function () {
   var targets = document.querySelectorAll(
-    '.sec-head, .lead-profile, .profile-card, .tl-step, .dash, .honour, .outreach-band, .oc-card, .contact-inner, .machine-specs'
+    '.sec-head, .lead-profile, .profile-card, .outreach-band, .oc-card, .contact-inner, .machine-figure, .robot-awards, .fund-card, .alumni-card, .tier, .give, .sponsor-slot'
   );
   if (!('IntersectionObserver' in window)) {
     targets.forEach(function (el) { el.classList.add('in'); });
@@ -1508,85 +1993,6 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
   Array.prototype.forEach.call(nums, function (n) { io.observe(n); });
 })();
 
-/* ── L5 particles + L6 gold streaks ──────────────────────────────── */
-(function () {
-  var canvas = document.getElementById('particles');
-  if (!canvas || !canvas.getContext) return;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var ctx = canvas.getContext('2d');
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var W = 0, H = 0, parts = [], streaks = [];
-  var css = getComputedStyle(document.documentElement);
-  var purple = (css.getPropertyValue('--p2') || '#7C3AED').trim();
-  var gold = (css.getPropertyValue('--accent') || '#D4AF37').trim();
-
-  function resize() {
-    W = canvas.clientWidth; H = canvas.clientHeight;
-    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    seed();
-  }
-  function seed() {
-    var density = Math.min(96, Math.round((W * H) / 26000));
-    parts = [];
-    for (var i = 0; i < density; i++) {
-      parts.push({
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 1.3 + 0.35,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: -(Math.random() * 0.22 + 0.05),
-        a: Math.random() * 0.5 + 0.16,
-        gold: Math.random() < 0.14
-      });
-    }
-    streaks = [];
-    for (var s = 0; s < 3; s++) {
-      streaks.push({ y: Math.random() * H, x: -260, len: 130 + Math.random() * 190,
-                     sp: 0.5 + Math.random() * 0.7, a: 0, delay: Math.random() * 900 });
-    }
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    for (var i = 0; i < parts.length; i++) {
-      var p = parts[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.y < -8) { p.y = H + 8; p.x = Math.random() * W; }
-      if (p.x < -8) p.x = W + 8; else if (p.x > W + 8) p.x = -8;
-      ctx.globalAlpha = p.a;
-      ctx.fillStyle = p.gold ? gold : purple;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-      ctx.fill();
-    }
-    for (var k = 0; k < streaks.length; k++) {
-      var st = streaks[k];
-      if (st.delay > 0) { st.delay -= 1; continue; }
-      st.x += st.sp;
-      if (st.x - st.len > W + 260) { st.x = -260; st.y = Math.random() * H; st.delay = 420 + Math.random() * 700; }
-      st.a = st.a < 1 ? st.a + 0.02 : 1;
-      var g = ctx.createLinearGradient(st.x - st.len, 0, st.x, 0);
-      g.addColorStop(0, 'rgba(0,0,0,0)');
-      g.addColorStop(0.6, 'rgba(212,175,55,0.16)');
-      g.addColorStop(1, 'rgba(244,214,117,0.30)');
-      ctx.globalAlpha = Math.min(st.a, 0.85);
-      ctx.strokeStyle = g; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(st.x - st.len, st.y); ctx.lineTo(st.x, st.y); ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-  }
-  var raf = null, paused = false;
-  /* The particle field is ambience, so it runs at half rate — it never
-     needs to compete with the scroll for frames. */
-  var last = 0, HALF = 1000 / 30;
-  function loop(now) {
-    if (!paused && now - last >= HALF) { last = now; draw(); }
-    raf = requestAnimationFrame(loop);
-  }
-  document.addEventListener('visibilitychange', function () { paused = document.hidden; });
-  window.addEventListener('resize', resize);
-  resize();
-  if (reduce) { draw(); } else { loop(); }
-})();
 
 /* ── end of page scripts ───────────────────────────────────────── */
 </script>
@@ -1620,12 +2026,33 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
    ═══════════════════════════════════════════════════════════════════ */
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── phones get the flat grid, not the wall ──────────────────────
+     The wall is scroll-scrubbed: on a phone it costs six viewport-
+     heights of scrolling to show twelve people, and it makes the
+     device rasterise thirteen full-card textures through SVG→canvas
+     before the visitor has scrolled anywhere near it. The roster
+     already has a first-class flat presentation, so phones simply use
+     it — no renderer is created and no texture is painted.
+
+     The width clause demands a COARSE pointer, so a desktop window
+     dragged narrow is never demoted to the grid; the second clause
+     catches a phone held in landscape, which is wide but short. A
+     tablet matches neither, and keeps the wall. */
+  var phone = false;
+  if (window.matchMedia) {
+    phone = window.matchMedia('(pointer: coarse)').matches &&
+            (window.matchMedia('(max-width: 767px)').matches ||
+             window.matchMedia('(max-height: 560px)').matches);
+  }
+
   var roster = document.getElementById('roster');
   var stage = document.getElementById('roster-stage');
   var grid = document.getElementById('roster-grid');
   if (!roster || !stage || !grid) return;
   if (!window.THREE) { stage.remove(); return; }   /* no WebGL → the DOM grid stands */
   if (reduce) { stage.remove(); return; }          /* decided before any context */
+  if (phone) { stage.remove(); return; }           /* phones: the DOM grid is the design */
 
   var els = Array.prototype.slice.call(grid.querySelectorAll('.profile-card'));
   if (!els.length) { stage.remove(); return; }
@@ -1764,7 +2191,15 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
       n.style.opacity = '1';
       n.style.animation = 'none';
       n.style.transition = 'none';
-      if (n.style.visibility === 'hidden') n.style.visibility = 'visible';
+      /* FORCE visibility, do not merely un-hide. `.roster-live
+         .roster-grid { visibility: hidden }` is what hides the real grid
+         once WebGL takes over, and `visibility` INHERITS — so every card
+         in the clone came out invisible, and the rasterised texture held
+         only the placeholder chrome (which re-shows itself) and none of
+         the name, role or id. The old test here read `n.style`, i.e. the
+         INLINE style, which never matched a stylesheet rule. Set the
+         value unconditionally instead of testing for it. */
+      n.style.visibility = 'visible';
     }
 
     var svg =
@@ -1806,29 +2241,65 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     });
   }
 
-  /* ── the 3D track ─────────────────────────────────────────────────
-     Camera at z = 0 looking down -Z, so every card lives at NEGATIVE z
-     and the focused one is the CLOSEST (least negative). Solved against
-     the real frustum (FOV 42°) for the roster's portrait cards:
+  /* ── the 3D wall ──────────────────────────────────────────────────
+     A WALL, not a rail. The roster is laid out four across and scrolls
+     vertically by row: one row of four is always the focus, with the
+     next row coming up from below and the previous one leaving above.
 
-       focused   68% of frame height, centred
-       neighbour 41%, centred at ±0.79 — fully visible and clear of the
-                 focused card, so you see what is coming next
-       handoff   both cards at 44% at the midpoint — a true overlap,
-                 never a snap
+     Geometry is solved against the real frustum (FOV 42°), and the ONE
+     lever that controls on-screen card size is how much of the frame
+     WIDTH the four columns occupy. Depth is deliberately NOT a lever:
+     because card width and the visible frame width both scale linearly
+     with |z|, moving the wall deeper changes perspective foreshortening
+     but never apparent size. Hence a single FRONT_Z and a card width
+     solved from the column count.
 
-     These numbers are solved against the frustum, not eyeballed. */
-  var SLOT_H  = 2.20;   /* vertical pitch between slots */
-  var FRONT_Z = -4.4;   /* the focused card's depth */
-  var FALLOFF = 0.42;   /* extra depth per slot away */
-  var BACK    = 2.4;    /* how far a non-focused card falls back */
-  var SIDE_X  = 0.30;   /* lateral drift, so the rail recedes */
+     Columns are fixed in X — a four-across band must stay in register
+     as it scrolls, or it reads as four separate rails. */
+  var COLS    = 4;      /* cards per row — the band the brief asks for */
+  var COLS_MIN = 2;     /* ...but four across is illegible on a phone */
+  var WALL_FILL = 0.90; /* fraction of frame width the columns occupy */
+  var H_GAP   = 0.10;   /* horizontal gap, as a fraction of card width */
+  var V_GAP   = 0.16;   /* vertical gap between rows, fraction of card height */
+  var FRONT_Z = -10;    /* the wall's depth */
 
-  /* Card size is derived from the target frame fill at FRONT_Z rather
-     than chosen: a portrait card that fills 68% of the frame at that
-     depth is exactly 1.447 × 2.297 world units. */
-  var BASE_H  = 2.297;
-  var BASE_W  = 1.447;
+  /* Portrait card aspect, matching the capture below. */
+  var CARD_AR = 0.63;
+
+  /* the visible frame at FRONT_Z — recomputed on resize */
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var VIEW_H = 2 * Math.abs(FRONT_Z) * Math.tan(Math.PI * 42 / 360);
+  var VIEW_W = VIEW_H * (window.innerWidth / Math.max(1, window.innerHeight));
+
+  var BASE_W, BASE_H, COL_PITCH, ROW_PITCH;
+
+  /* Solve the wall's cell size from the frame. Called at build and on
+     every resize, because the frame's ASPECT decides how wide each of
+     the columns may be.
+
+     COLS is chosen here, not fixed: four across on a 390px phone puts
+     each card at ~82px wide, where the name is unreadable. The band
+     drops to three and then to two columns as the viewport narrows, and
+     the ROW count follows, so the scroll length stays honest. */
+  function solveWall() {
+    VIEW_H = 2 * Math.abs(FRONT_Z) * Math.tan(Math.PI * 42 / 360);
+    VIEW_W = VIEW_H * (vw / Math.max(1, vh));
+
+    /* a card narrower than this cannot carry its own name legibly */
+    var MIN_CARD_W = 1.35;
+    COLS = 4;
+    while (COLS > COLS_MIN) {
+      var test = (VIEW_W * WALL_FILL) / (COLS + (COLS - 1) * H_GAP);
+      if (test >= MIN_CARD_W) break;
+      COLS--;
+    }
+
+    var usable = VIEW_W * WALL_FILL;
+    BASE_W = usable / (COLS + (COLS - 1) * H_GAP);
+    BASE_H = BASE_W / CARD_AR;
+    COL_PITCH = BASE_W * (1 + H_GAP);
+    ROW_PITCH = BASE_H * (1 + V_GAP);
+  }
 
   var cards = [], painted = 0;
 
@@ -1846,7 +2317,16 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     );
     grp.add(edge);
 
-    grp.userData = { w: w, h: h, mat: mat, edge: edge };
+    /* Column and row come from the wall's own grid, and the column's X
+       is fixed for the lifetime of the card (aside from resize), so the
+       four-across band stays in register while the rows scroll. */
+    var col = i % COLS;
+    var row = Math.floor(i / COLS);
+    grp.userData = {
+      w: w, h: h, mat: mat, edge: edge,
+      col: col, row: row,
+      colX: (col - (COLS - 1) / 2) * COL_PITCH
+    };
     scene.add(grp);
 
     domToCanvas(el).then(function (c) {
@@ -1872,22 +2352,33 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     return grp;
   }
 
+  /* solve the wall before anything is built, since card size, column X
+     and row pitch all come out of the frame's aspect */
+  solveWall();
   for (var i = 0; i < N; i++) cards.push(buildCard(els[i], i));
 
+  /* ── rows ─────────────────────────────────────────────────────────
+     The wall scrolls by ROW, not by card: `prog` is a continuous row
+     index spanning 0…ROWS-1. Stopping halfway between two rows leaves
+     the wall halfway through the transition, so there is no snap.
+
+     ROWS is derived from COLS on demand, because the column count is
+     itself responsive — recomputing it here keeps the scroll length and
+     the roster's height in step with the current band width. */
+  function rowCount() { return Math.ceil(N / COLS); }
+
   /* ── scroll → progress ────────────────────────────────────────────
-     The roster's own scroll range maps to the sequence. `prog` spans
-     0…N-1 and is eased so the camera trails the wheel a touch. */
+     The roster's own scroll range maps to the sequence, and is eased
+     so the wall trails the wheel a touch. */
   var prog = 0, EASE = 0.085;
 
   function targetProgress() {
     var r = roster.getBoundingClientRect();
-    var vh = window.innerHeight;
     var span = Math.max(1, roster.offsetHeight - vh);
     var seen = Math.max(0, Math.min(span, -r.top));   /* px scrolled into the roster */
-    return (seen / span) * (N - 1);
+    return (seen / span) * Math.max(0, rowCount() - 1);
   }
 
-  var vw = window.innerWidth, vh = window.innerHeight;
   var ptrX = 0, ptrY = 0, curPtrX = 0, curPtrY = 0;
   var shownPos = -1;
 
@@ -1898,49 +2389,51 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     curPtrX += (ptrX - curPtrX) * 0.05;
     curPtrY += (ptrY - curPtrY) * 0.05;
 
+    /* how far off the optical centre a row must be before it is gone */
+    var fade = ROW_PITCH * 2.1;
+
     for (var i = 0; i < N; i++) {
       var g = cards[i];
-      var distance = i - prog;
 
-      /* focus: 1 when this card owns the centre → 0 one slot away */
-      var ad = Math.abs(distance);
-      var focus = Math.max(0, 1 - ad);
-      var ease = focus * focus * (3 - 2 * focus);       /* smoothstep handoff */
+      /* COLUMN IS FIXED. A four-across band has to stay in register as
+         it scrolls, or the wall reads as four independent rails. Only
+         the row moves. This is the whole difference from the old rail. */
+      var x = g.userData.colX;
 
-      /* DEPTH — the centred card is CLOSEST; every other card falls away
-         on its own slot. Symmetric above and below, so the track reads
-         as one rigid column slid past the camera. The retreat is gentle:
-         perspective already shrinks far cards, and a heavy explicit
-         scale would fight it and flatten the depth back into a stack. */
-      var z = FRONT_Z - ad * FALLOFF - (1 - ease) * BACK;
+      /* Y IS THE TRACK. The card's resting height is its row's own slot;
+         scroll slides the band so the active row sits at the optical
+         centre. Wrapping is unnecessary — ROWS+2 rows are materialised
+         and the frame only ever shows ~1.7 of them. */
+      var y = -(g.userData.row - prog) * ROW_PITCH;
 
-      /* Y IS THE TRACK. A card's resting height is its own slot; scroll
-         slides the column so the active slot sits at the optical centre.
-         Cards keep their gaps and travel down the screen. */
-      var y = -distance * SLOT_H;
+      /* DEPTH — the centred row is CLOSEST and every other row falls
+         away, so the band recedes above and below the focus and the
+         wall reads as a surface rather than a flat sheet. Symmetric, so
+         it stays a rigid wall being slid past the camera. */
+      var rowDist = Math.abs(g.userData.row - prog);
+      var z = FRONT_Z - Math.min(rowDist, 3) * 0.85;
 
-      /* X — a light lateral drift, so the column reads as a receding rail */
-      var x = distance * SIDE_X;
+      /* ROTATION — the band tips away as it leaves, straightens as it
+         arrives. Around X only: a four-across row must not yaw, or its
+         columns shear out of alignment with their neighbours. */
+      var rx = (g.userData.row - prog) * 0.055;
 
-      /* ROTATION — the plane turns away as it leaves, straightens as it
-         arrives */
-      var ry = -distance * 0.30;
-      var rx = distance * 0.10;
-      var rz = distance * 0.035;
-
-      /* SCALE — a subtle nudge only. The perspective divide is what makes
-         the focused card largest. */
-      var sc = 0.95 + ease * 0.05;
-
+      /* SCALE — no explicit scale. The perspective divide already makes
+         the focused row largest; adding scale on top would flatten the
+         depth back into a stack. */
       g.position.set(x, y, z);
-      g.rotation.set(rx, ry, rz);
-      g.scale.setScalar(sc);
+      g.rotation.set(rx, 0, 0);
+      g.scale.setScalar(1);
 
-      /* neighbours stay legible above and below, then fade out */
-      var op = Math.max(0, 1 - ad * 0.34);
-      op = op * op * (3 - 2 * op);
+      /* FADE BY DISTANCE FROM THE FOCUS ROW. Measured in world units so
+         it holds at any viewport, rather than in row indices, so resizing
+         the window does not change how many rows are visible. */
+      var op = 1 - (rowDist * ROW_PITCH) / fade;
+      op = Math.max(0, Math.min(1, op));
+      op = op * op * (3 - 2 * op);                    /* smoothstep */
       g.userData.mat.opacity = op;
-      g.userData.edge.material.opacity = 0.10 + ease * 0.6;
+      g.userData.edge.material.opacity = 0.10 + op * 0.6;
+      g.visible = op > 0.01;
     }
 
     /* camera holds a held-hand drift, not a locked tripod */
@@ -1949,13 +2442,16 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     camera.rotation.x = curPtrY * 0.03;
     camera.rotation.y = -curPtrX * 0.04;
 
+    /* STATUS LINE — reports the visible row of four, e.g. "05 / 13".
+       Counting by card index inside the row keeps the read-out honest
+       about which four members are on screen. */
     if (painted === N) {
-      var nearest = Math.round(prog) + 1;
-      if (nearest < 1) nearest = 1;
-      if (nearest > N) nearest = N;
-      if (nearest !== shownPos) {
-        shownPos = nearest;
-        say('Scroll to travel · <b>' + String(nearest).padStart(2, '0') + '</b> / ' + String(N).padStart(2, '0'));
+      var firstCard = Math.round(prog) * COLS + 1;
+      if (firstCard < 1) firstCard = 1;
+      if (firstCard > N) firstCard = N;
+      if (firstCard !== shownPos) {
+        shownPos = firstCard;
+        say('Scroll to travel · <b>' + String(firstCard).padStart(2, '0') + '</b> / ' + String(N).padStart(2, '0'));
       }
     }
 
@@ -1968,6 +2464,25 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
     renderer.setSize(vw, vh);
     camera.aspect = vw / vh;
     camera.updateProjectionMatrix();
+    /* the frame's aspect decides how wide each of the four columns may
+       be, so the whole wall — card size, pitches, and every card's X —
+       has to be re-solved on resize */
+    solveWall();
+    for (var i = 0; i < cards.length; i++) {
+      var g = cards[i], ud = g.userData;
+      g.children[0].geometry.dispose();
+      g.children[0].geometry = new THREE.PlaneGeometry(BASE_W, BASE_H);
+      g.children[1].geometry.dispose();
+      g.children[1].geometry = new THREE.EdgesGeometry(new THREE.PlaneGeometry(BASE_W, BASE_H));
+      /* the band may have narrowed to 3 or 2 columns, so each card's
+         column and row are re-derived, not just its size */
+      ud.col = i % COLS;
+      ud.row = Math.floor(i / COLS);
+      ud.colX = (ud.col - (COLS - 1) / 2) * COL_PITCH;
+      ud.w = BASE_W; ud.h = BASE_H;
+    }
+    /* the roster's scroll length is one viewport per row */
+    roster.style.setProperty('--roster-n', rowCount());
   }
   window.addEventListener('resize', size, { passive: true });
 
