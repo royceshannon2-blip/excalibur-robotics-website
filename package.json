@@ -1,13 +1,14 @@
 {
   "name": "biobuzz26-27",
   "version": "1.0.0",
-  "description": "FTC Team 22972 Excalibur Robotics website — single-file prototype",
+  "description": "FTC Team 22972 Excalibur Robotics website \u2014 single-file prototype",
   "main": "server.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node server.js",
+    "preview": "node server.js",
+    "check": "python3 tools/check-deploy.py",
+    "build": "vite build"
   },
   "engines": {
     "node": ">=18"

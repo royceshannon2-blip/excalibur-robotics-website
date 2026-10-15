@@ -7,6 +7,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
+import { gzipSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ const MIME = {
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
   ".webp": "image/webp",
+  ".avif": "image/avif",
   ".woff": "font/woff",
   ".woff2": "font/woff2",
   ".mp4": "video/mp4",
@@ -59,27 +61,44 @@ const server = http.createServer((req, res) => {
       if (!err && stat.isDirectory()) {
         return fs.stat(path.join(resolved, DEFAULT_PAGE), (e2, s2) => {
           if (e2 || !s2.isFile()) return notFound(res);
-          streamFile(path.join(resolved, DEFAULT_PAGE), res);
+          streamFile(path.join(resolved, DEFAULT_PAGE), req, res);
         });
       }
       if (err || !stat.isFile()) return notFound(res);
-      streamFile(resolved, res);
+      streamFile(resolved, req, res);
     });
   } catch {
     notFound(res);
   }
 });
 
-function streamFile(file, res) {
+/* Types GitHub Pages compresses. Compressing here too means a local load
+   costs what the deployed load costs — which matters most on a phone,
+   where an uncompressed 715 KB page looks far worse than the real thing. */
+const COMPRESSIBLE = /^(?:text\/|application\/(?:javascript|json|xml|manifest\+json)|image\/svg\+xml)/i;
+const MIN_BYTES = 1024;
+
+function streamFile(file, req, res) {
   const ext = path.extname(file).toLowerCase();
   const type = MIME[ext] || "application/octet-stream";
   fs.readFile(file, (err, data) => {
     if (err) return notFound(res);
-    res.writeHead(200, {
+
+    const wantsGzip = /\bgzip\b/i.test(String(req.headers["accept-encoding"] || ""));
+    const headers = {
       "Content-Type": type,
-      "Cache-Control": "no-cache", // dev server: always fresh
-    });
-    res.end(data);
+      "Cache-Control": "no-cache", // local preview: always fresh
+      Vary: "Accept-Encoding",
+    };
+
+    if (wantsGzip && data.length >= MIN_BYTES && COMPRESSIBLE.test(type)) {
+      data = gzipSync(data, { level: 6 });
+      headers["Content-Encoding"] = "gzip";
+    }
+
+    headers["Content-Length"] = data.length;
+    res.writeHead(200, headers);
+    res.end(req.method === "HEAD" ? undefined : data);
   });
 }
 
