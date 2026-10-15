@@ -354,7 +354,17 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
    owns their `transform`. The reveal therefore animates opacity and a
    filter only: writing `transform` here would overwrite the camera's
    zoom every time a card entered, cancelling the card-approach effect. */
-.sec-head, .lead-profile, .profile-card, .outreach-band, .oc-card, .contact-inner {
+/* ── the hidden state for every surface the reveal owns ──────────────
+   Keep this list WHOLE and keep it above `.in`. It used to be split:
+   six selectors here and seven more in a later style block, which meant
+   `.in { opacity: 1 }` came BEFORE `.alumni-card { opacity: 0 }` and lost
+   the tie-break on source order (equal specificity, later wins). Those
+   seven never became visible — the .in class was applied and did nothing
+   — so the machine figure, the robot awards, the donate panel, the fund
+   cards, the alumni cards, the tiers and the sponsor slots were all
+   invisible on the live page. */
+.sec-head, .lead-profile, .profile-card, .outreach-band, .oc-card, .contact-inner,
+.machine-figure, .robot-awards, .give, .fund-card, .alumni-card, .tier, .sponsor-slot {
   opacity: 0; filter: blur(6px);
   transition: opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
 }
@@ -1060,22 +1070,19 @@ h3 { font-family: var(--font-display); font-size: clamp(17px, 1.5vw, 21px); line
 }
 .sec-head.in::after { transform: scaleX(1); }
 
-/* reveals extended to the previously static surfaces. Elements that
-   already own a border/shadow transition get a merged list here, so
-   the opacity/filter fade and the hover states keep their own easing
-   (previously the base hover transition overrode the reveal one and
-   these cards would pop in). */
-.machine-figure, .robot-awards, .give {
-  opacity: 0; filter: blur(6px);
-  transition: opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
-}
+/* These surfaces already own a border/shadow transition, so they get a
+   merged list: the reveal fade keeps its own easing and the hover states
+   keep theirs (the base hover transition used to override the reveal one,
+   so these cards popped in).
+
+   ONLY transitions belong here. The `opacity: 0` half of the reveal lives
+   in the single rule above, next to `.in`; repeating it down here outranks
+   `.in` on source order and hides the element for good. */
 .fund-card, .alumni-card {
-  opacity: 0; filter: blur(6px);
   transition: border-color .35s var(--ease), box-shadow .35s var(--ease),
               opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
 }
 .tier, .sponsor-slot {
-  opacity: 0; filter: blur(6px);
   transition: border-color .35s var(--ease), box-shadow .35s var(--ease), transform .35s var(--ease),
               opacity .75s var(--ease) var(--d, 0ms), filter .75s var(--ease) var(--d, 0ms);
 }

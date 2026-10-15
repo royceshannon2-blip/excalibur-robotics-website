@@ -67,6 +67,76 @@ def tracked_by_git(paths: list[str]) -> set[str]:
     return {p for p in out.split("\0") if p}
 
 
+def css_rules(css: str) -> list[tuple[str, str, int]]:
+    """(selector, body, offset) for every style rule, descending into @media.
+
+    Comments are stripped first: several of them mention `.in { opacity: 1 }`
+    in prose, and a brace inside a comment would derail a naive scan.
+    """
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    rules: list[tuple[str, str, int]] = []
+    stack: list[tuple[str, int]] = []
+    prelude_start = 0
+    for i, ch in enumerate(css):
+        if ch == "{":
+            stack.append((css[prelude_start:i].strip(), i))
+            prelude_start = i + 1
+        elif ch == "}":
+            if stack:
+                prelude, open_at = stack.pop()
+                body = css[open_at + 1:i]
+                if prelude.startswith("@"):
+                    if "{" in body:  # nested (e.g. @media)
+                        rules.extend(css_rules(body))
+                elif prelude:
+                    rules.append((prelude, body, open_at))
+            prelude_start = i + 1
+    return rules
+
+
+def check_reveal_order(html: str) -> list[str]:
+    """Reveal targets must not be hidden by a rule that comes after `.in`.
+
+    This is not hypothetical: the reveal's hidden state was split across two
+    style blocks, so `.in { opacity: 1 }` sat ABOVE `.alumni-card { opacity: 0 }`,
+    tied on specificity, and lost on source order. The .in class was applied
+    and did nothing, and 21 elements — the machine figure, the robot awards,
+    the donate panel, every fund card, every alumni card, every tier and both
+    sponsor slots — were invisible on the page with no error to point at it.
+    """
+    m = re.search(r"var targets\s*=\s*document\.querySelectorAll\(\s*['\"]([^'\"]+)['\"]", html)
+    if not m:
+        return ["could not find the reveal target list in the page's script"]
+    targets = {t.strip() for t in m.group(1).split(",") if t.strip()}
+
+    style = "\n".join(
+        b for b in re.findall(r"<style>(.*?)</style>", html, re.S) if "inlineCSS" not in b
+    )
+    rules = css_rules(style)
+
+    in_offset = None
+    for selector, body, offset in rules:
+        if ".in" in {s.strip() for s in selector.split(",")} and "opacity" in body:
+            in_offset = offset
+            break
+    if in_offset is None:
+        return ["no `.in { opacity: ... }` rule found — the reveal has no visible state"]
+
+    problems = []
+    for selector, body, offset in rules:
+        if offset <= in_offset:
+            continue
+        if not re.search(r"opacity\s*:\s*0(?![.\d])", body):
+            continue
+        hit = sorted(targets & {s.strip() for s in selector.split(",")})
+        for t in hit:
+            problems.append(
+                f"{t}   [hidden after .in]  -- this rule outranks `.in` on source order, "
+                f"so the element never becomes visible"
+            )
+    return problems
+
+
 def main() -> int:
     if not os.path.exists(PAGE):
         print(f"{PAGE} not found — run from the repo root", file=sys.stderr)
@@ -112,6 +182,13 @@ def main() -> int:
     if not os.path.exists(".nojekyll"):
         ok = False
         print("\n.nojekyll is missing: GitHub Pages will run Jekyll over the tree")
+
+    reveal = check_reveal_order(html)
+    if reveal:
+        ok = False
+        print("\nREVEAL ORDER:")
+        for line in reveal:
+            print(f"  {line}")
 
     if ok:
         print("\nOK — every referenced asset exists, is committed, and is relative")
