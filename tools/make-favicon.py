@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Generate the site's icons from its own nav glyph.
+"""Generate the site's icons from the Excalibur logo.
 
-The page never declared an icon, so every browser fired an implicit
-/favicon.ico request and logged a 404 — the only console error the site
-produced. These are drawn from the same four-point star as the nav
-mark, so the tab icon and the header can never drift apart.
+The tab icon and the touch icon both come from `excaliburlogo.png`, so
+they can never drift from the mark the team actually uses.
 
 Run from the repo root:
 
@@ -13,52 +11,45 @@ Run from the repo root:
 
 from __future__ import annotations
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
-# the nav glyph's path, in its own 24x24 space:
-#   M12 2.5 L13.4 8.2 L20 9.6 L13.4 11 L12 21.5 L10.6 11 L4 9.6 L10.6 8.2 Z
-STAR = [
-    (12, 2.5), (13.4, 8.2), (20, 9.6), (13.4, 11),
-    (12, 21.5), (10.6, 11), (4, 9.6), (10.6, 8.2),
-]
-UNITS = 24
-PLATE = (11, 6, 22)      # #0B0616 — the site's panel ground
-GOLD = (212, 175, 55)    # #D4AF37 — --accent
-RADIUS_UNITS = 4.5
-SS = 8                   # supersample factor for smooth edges
+SOURCE = "excaliburlogo.png"
+PLATE = (11, 6, 22)       # #0B0616 — the site's panel ground
+PAD = 0.06                # breathing room around the mark, as a ratio
 
 
-def draw_icon(size: int, radius_units: float = RADIUS_UNITS) -> Image.Image:
-    big = size * SS
-    k = big / UNITS
-    im = Image.new("RGBA", (big, big), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    r = radius_units * k
-    if r > 0:
-        d.rounded_rectangle([0, 0, big - 1, big - 1], radius=r, fill=PLATE + (255,))
-    else:
-        d.rectangle([0, 0, big - 1, big - 1], fill=PLATE + (255,))
-    d.polygon([(x * k, y * k) for x, y in STAR], fill=GOLD + (255,))
-    return im.resize((size, size), Image.LANCZOS)
+def load_mark() -> Image.Image:
+    """The logo, trimmed to its ink and squared off with a little padding."""
+    im = Image.open(SOURCE).convert("RGBA")
+    im = im.crop(im.split()[3].getbbox())
+    side = round(max(im.size) * (1 + PAD * 2))
+    canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    canvas.paste(im, ((side - im.width) // 2, (side - im.height) // 2))
+    return canvas
+
+
+def icon(mark: Image.Image, size: int, *, opaque: bool = False) -> Image.Image:
+    out = mark.resize((size, size), Image.LANCZOS)
+    if not opaque:
+        return out
+    # iOS ignores transparency and would paint the corners black.
+    plate = Image.new("RGBA", (size, size), PLATE + (255,))
+    plate.alpha_composite(out)
+    return plate
 
 
 def main() -> int:
-    # A rounded plate for the tab; a full square for iOS, which applies
-    # its own mask and would otherwise show plate-less corners.
-    draw_icon(180, radius_units=0).save("apple-touch-icon.png")
+    mark = load_mark()
 
-    ico = [draw_icon(s) for s in (16, 32, 48)]
-    ico[0].save("favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    icon(mark, 180, opaque=True).save("apple-touch-icon.png")
+    icon(mark, 192).save("favicon-192.png")
 
-    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {UNITS} {UNITS}" role="img" aria-label="Excalibur">
-  <rect width="{UNITS}" height="{UNITS}" rx="{RADIUS_UNITS}" fill="#0B0616"/>
-  <path d="M12 2.5 L13.4 8.2 L20 9.6 L13.4 11 L12 21.5 L10.6 11 L4 9.6 L10.6 8.2 Z" fill="#D4AF37"/>
-</svg>
-"""
-    with open("favicon.svg", "w", encoding="utf-8") as fh:
-        fh.write(svg)
+    sizes = [16, 32, 48]
+    icon(mark, max(sizes)).save(
+        "favicon.ico", sizes=[(s, s) for s in sizes]
+    )
 
-    print("wrote favicon.svg, favicon.ico (16/32/48), apple-touch-icon.png (180)")
+    print("wrote favicon.ico (16/32/48), favicon-192.png, apple-touch-icon.png (180)")
     return 0
 
 

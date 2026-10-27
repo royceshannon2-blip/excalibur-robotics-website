@@ -43,6 +43,30 @@ SOURCES = [
     ("20251118_123144.jpg", [480, 960, 1280, 1600], "photo"),
     ("IMG_8479.jpg", [480, 960, 1280, 1600], "photo"),
     ("foundation.png", [480, 960], "alpha"),
+    # Phoenix: the 2025-26 DECODE robot render. It is a cut-out (74% of the
+    # frame is transparent), so it ships as webp/png and is placed with
+    # object-fit: contain rather than cover -- cropping it would cut the
+    # robot, not the empty air around it.
+    ("Phoenix.png", [480, 960, 1280, 1600], "alpha"),
+    # Member portraits. Cards render at ~300px (3D capture at 900px), so a
+    # 480/960 ladder is enough; the smaller scans only earn the 480 tier.
+    # Alumni shots (Abhi, Ansh, Arpan, Matthew, Vishwanth) and Yichen's
+    # 217px WebP are already small originals and ship from the repo root
+    # as-is — a ladder would only upscale them.
+    ("Trey.jpg", [480, 960], "photo"),
+    ("Sanjey.jpg", [480, 960], "photo"),
+    ("Lamont.jpg", [480, 960], "photo"),
+    ("Royce.jpg", [480, 960], "photo"),
+    ("Kahlan.png", [480, 960], "photo"),
+    ("Lucas.jpg", [480, 960], "photo"),
+    ("Sanjay.png", [480, 960], "photo"),
+    ("SJ.jpg", [480, 960], "photo"),
+    ("Eshan.jpg", [480, 960], "photo"),
+    ("Peyton.jpg", [480, 960], "photo"),
+    ("Keerthika.png", [480], "photo"),
+    ("Audrey.png", [480], "photo"),
+    ("Reese.png", [480, 960], "photo"),
+    ("Zach.jpg", [480, 960], "photo"),
 ]
 
 AVIF_QUALITY = 62

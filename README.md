@@ -45,7 +45,7 @@ are dependency-light (`Pillow`) and safe to re-run:
 
 ```bash
 python3 tools/make-images.py     # AVIF/WebP/JPEG ladders at 480/960/1280/1600
-python3 tools/make-favicon.py    # favicon.svg, favicon.ico, apple-touch-icon.png
+python3 tools/make-favicon.py    # favicon.ico, favicon-192.png, apple-touch-icon.png
 ```
 
 `index.html` offers the image tiers through `<picture>` + `srcset`/`sizes`; the
